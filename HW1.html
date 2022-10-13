@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xmas tree</title>
+</head>
+
+<body>
+    <div id='bkgd' style="position:absolute; top: 10vh; left: 10vw; width:60vw; height: 60vh;background: linear-gradient(to bottom right, pink ,#FFB3E6); z-index: -5;">
+        <button id='power'>Power</button>
+        <button id='toggleA'>normal mode</button>
+        <div class='snow' ></div>
+        <img src="https://imgur.com/zwdXUjr.jpg" style="position:absolute;top:3vw;left:18vw;width:20vw;z-index:-2" />
+        <img src="https://imgur.com/hovrlpc.jpg" style="position:absolute;top:5.3vw;left:26.7vw;width:3vw;z-index:-2" />
+        
+        <img src="https://i.imgur.com/7rSIlhE.png" style="position:absolute;top:10vw;left:-3vw;width:30vw;z-index:-2" />
+        <img src="https://i.imgur.com/mgp7hP0.png" style="position:absolute;top:0vw;left:13vw;width:30vw;z-index:-2" />
+        
+        <img src="https://i.imgur.com/b4LFHm2.png" style="position:absolute;top:10vw;left:40vw;width:20vw;z-index:-2" />
+        <img src="https://i.imgur.com/B2JcWIu.png" style="position:absolute;top:14vw;left:30vw;width:2vw;z-index:-2" />
+        <img src="https://i.imgur.com/B2JcWIu.png" style="position:absolute;top:18vw;left:23vw;width:2vw;z-index:-2" />
+        <img src="https://i.imgur.com/AqgHSwa.png" style="position:absolute;top:21vw;left:16vw;width:9vw;z-index:-3" />
+    </div>
+
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="./PureSnow.js"></script>
+    <script>
+        var powerOn = false;
+        var modeState = false;
+        $('#power').click(function () {
+            powerOn = !powerOn;
+
+
+            lamps.forEach(function (item) { item.startBlink(); });
+
+        });
+        $('#toggleA').click(function () {
+            modeState = !modeState;   // toggle
+            if (modeState === true) {
+                // must be: from false to true
+
+                $('#toggleA').html("<mark><em>complex mode</em></mark>");
+
+            } else {
+                $('#toggleA').text("normal mode");
+            }
+        });
+        function getRandom(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        };
+        class Light {
+
+            constructor(name) {
+                this.name = name + Light.id++;
+                this.myStatus = false;
+
+                let el = document.createElement('div');
+                el.id = this.name;
+
+                let bkgd = document.getElementById('bkgd');
+                bkgd.appendChild(el);
+                this.hue = Math.random() * 360;
+
+                // styles
+                el.setAttribute("style", `position:absolute;width:8px;height:8px;border-radius:6px;z-index:1; background-color: hsl(0, 0%, 50%); `);
+
+                el.style.left = 50 + '%';
+                el.style.top = 50 + '%';
+            }
+
+            toggle() {
+                this.myStatus = !this.myStatus;
+
+                if (powerOn && modeState) {
+                    setTimeout(() => { this.toggle(); }, getRandom(1, 2) * 600);
+
+                }
+                else if (powerOn && modeState === false) {
+                    setTimeout(() => { this.toggle(); }, 600);
+                }
+                else {
+                    $('#' + this.name).css('backgroundColor', `hsl(0,0%,50%)`);
+                    return;
+                }
+
+                if (this.myStatus === true) {
+                    $('#' + this.name).css('backgroundColor', `hsl(${this.hue},43%,51%)`);
+
+                } else {
+                    $('#' + this.name).css('backgroundColor', `hsl(${this.hue},90%,24%)`);
+
+
+                }
+            }
+            
+            startBlink() {
+                var that = this;
+
+                setTimeout(() => { this.toggle(); }, 1000);
+
+                //setInterval (that.toggle, 500);   // somehow, it does not work
+            }
+        }
+
+        
+        Light.id = 0; // class variable
+        lamps = [];
+
+        for (let i = 0; i < 25; i++) {
+            let ll = new Light('light');
+            lamps.push(ll);
+        }
+        $('#light0').css({ "top": "9vw", "left": "28vw" });
+        $('#light1').css({ "top": "12vw", "left": "25.5vw" });
+        $('#light2').css({ "top": "13vw", "left": "30vw" });
+        $('#light3').css({ "top": "15vw", "left": "25vw" });
+        $('#light4').css({ "top": "16vw", "left": "31vw" });
+        $('#light5').css({ "top": "18vw", "left": "25vw" });
+        $('#light6').css({ "top": "18.5vw", "left": "31vw" });
+        $('#light7').css({ "top": "21vw", "left": "25vw" });
+        $('#light8').css({ "top": "22vw", "left": "31vw" });
+        $('#light23').css({ "top": "2vw", "left": "43vw" });
+        $('#light24').css({ "top": "1.7vw", "left": "44.5vw" });
+        $('#light9').css({ "top": "1vw", "left": "45vw" });
+        $('#light10').css({ "top": "1.8vw", "left": "47vw" });
+        $('#light11').css({ "top": "2.7vw", "left": "48vw" });
+        $('#light12').css({ "top": "4vw", "left": "50vw" });
+        $('#light13').css({ "top": "3vw", "left": "52vw" });
+        $('#light14').css({ "top": "3.5vw", "left": "55vw" });
+        $('#light15').css({ "top": "3.7vw", "left": "51vw" });
+        $('#light16').css({ "top": "4vw", "left": "50vw" });
+        $('#light17').css({ "top": "4.5vw", "left": "53vw" });
+        $('#light18').css({ "top": "3vw", "left": "56vw" });
+        $('#light19').css({ "top": "4vw", "left": "57vw" });
+        $('#light20').css({ "top": "3.4vw", "left": "58vw" });
+        $('#light21').css({ "top": "3.1vw", "left": "59vw" });
+        $('#light22').css({ "top": "2vw", "left": "59.5vw" });
+    </script>
+</body>
+
+</html>
