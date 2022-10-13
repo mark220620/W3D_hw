@@ -6,19 +6,43 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Xmas tree</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap');
+        .snow {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background-image: url("https://cdn.discordapp.com/attachments/744182992037216260/990023034524033105/snow1.png"), url("https://cdn.discordapp.com/attachments/744182992037216260/990023034758922250/snow2.png"), url("https://cdn.discordapp.com/attachments/744182992037216260/990023034951827556/snow3.png");
+
+            animation: snow 20s linear infinite;
+        }
+
+        @keyframes snow {
+            0% {
+                background-position: 0px 0px, 0px 0px, 0px 0px;
+            }
+
+            100% {
+                background-position: 500px 1000px, 400px 400px, 300px 300px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <div id='bkgd' style="position:absolute; top: 10vh; left: 10vw; width:60vw; height: 60vh;background: linear-gradient(to bottom right, pink ,#FFB3E6); z-index: -5;">
+    <div id='bkgd'
+        style="position:absolute; top: 10vh; left: 10vw; width:60vw; height: 60vh;background: linear-gradient(to bottom right, pink ,#FFB3E6); z-index: -5;">
         <button id='power'>Power</button>
         <button id='toggleA'>normal mode</button>
-        <div class='snow' ></div>
+        <div class='snow'></div>
         <img src="https://imgur.com/zwdXUjr.jpg" style="position:absolute;top:3vw;left:18vw;width:20vw;z-index:-2" />
         <img src="https://imgur.com/hovrlpc.jpg" style="position:absolute;top:5.3vw;left:26.7vw;width:3vw;z-index:-2" />
-        
+
         <img src="https://i.imgur.com/7rSIlhE.png" style="position:absolute;top:10vw;left:-3vw;width:30vw;z-index:-2" />
         <img src="https://i.imgur.com/mgp7hP0.png" style="position:absolute;top:0vw;left:13vw;width:30vw;z-index:-2" />
-        
+
         <img src="https://i.imgur.com/b4LFHm2.png" style="position:absolute;top:10vw;left:40vw;width:20vw;z-index:-2" />
         <img src="https://i.imgur.com/B2JcWIu.png" style="position:absolute;top:14vw;left:30vw;width:2vw;z-index:-2" />
         <img src="https://i.imgur.com/B2JcWIu.png" style="position:absolute;top:18vw;left:23vw;width:2vw;z-index:-2" />
@@ -26,7 +50,7 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="./PureSnow.js"></script>
+    
     <script>
         var powerOn = false;
         var modeState = false;
@@ -95,7 +119,7 @@
 
                 }
             }
-            
+
             startBlink() {
                 var that = this;
 
@@ -105,7 +129,7 @@
             }
         }
 
-        
+
         Light.id = 0; // class variable
         lamps = [];
 
