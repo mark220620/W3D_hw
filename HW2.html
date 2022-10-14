@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Input & Vector3 API</title>
+
+    <style>
+        .content {
+            width: 35vw;
+            height: 13vw;
+
+        }
+
+        .table {
+
+            width: 15vw;
+            height: 15vw;
+            position: relative;
+            border-radius: 10px;
+            color: black;
+            font-weight: bold;
+            font-size: 15px;
+            padding: 10px;
+            margin: 5px;
+            background-color: #b2d9bc;
+
+            float: right;
+        }
+
+        .tableA {
+            float: left;
+            width: 14vw;
+            height: 10vw;
+            position: relative;
+            color: black;
+            font-weight: bold;
+            font-size: 15px;
+            padding: 10px;
+            margin: 5px;
+            background-color: #b2d9bc;
+            border-radius: 10px;
+        }
+
+        .tableB {
+
+            width: 14vw;
+            height: 10vw;
+            position: relative;
+            color: black;
+            font-weight: bold;
+            font-size: 15px;
+            padding: 10px;
+            margin: 5px;
+            background-color: #b2d9bc;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body style="width: 1000px; height:1000px">
+    <div class="content">
+        <div class="tableA">
+            v
+            <hr>
+            x:
+            <input type='text' id='v_x'>
+            <br>
+            <span>y:</span>
+            <input type='text' id='v_y'>
+            <br>
+            <span>z:</span>
+            <input type='text' id='v_z'>
+
+        </div>
+        <div class="table">
+            inner product
+            <hr> v*w
+            <input type="text" id='innerProduct'>
+            <br>
+            v X W (vector product)
+            <hr>
+            <span>x</span>
+            <input type='text' id='C_x'>
+            <br>
+            <span>y</span>
+            <input type='text' id='C_y'>
+            <br>
+            <spanz>z</spanz>
+            <input type='text' id='C_z'>
+        </div>
+    </div>
+    <div class="tableB">
+        w
+        <hr>
+        <span>x:</span>
+        <input type='text' id='w_x'>
+        <br>
+        <span>y:</span>
+        <input type='text' id='w_y'>
+        <br>
+        <span>z:</span>
+        <input type='text' id='w_z'>
+        <br>
+
+    </div>
+
+    <button id='calculate'>calculate</button>
+
+
+    <script src="https://threejs.org/build/three.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script>
+
+        var v1, v2, v3;
+        var w1, w2, w3;
+
+
+        $('#calculate').click(
+            function () {
+
+                var v = new THREE.Vector3(v1, v2, v3);
+                var w = new THREE.Vector3(w1, w2, w3);
+                $('#innerProduct').val(v.clone().dot(w));
+                var c = new THREE.Vector3();
+                c.crossVectors(v, w);
+                $('#C_x').val(c.x);
+                $('#C_y').val(c.y);
+                $('#C_z').val(c.z);
+            }
+        );
+        $('#v_x').change(function () {
+            v1 = $(this).val();
+        });
+        $('#v_y').change(function () {
+            v2 = $(this).val();
+        });
+        $('#v_z').change(function () {
+            v3 = $(this).val();
+        });
+        $('#w_x').change(function () {
+            w1 = $(this).val();
+        });
+        $('#w_y').change(function () {
+            w2 = $(this).val();
+        });
+        $('#w_z').change(function () {
+            w3 = $(this).val();
+        });
+
+    </script>
+
+</body>
+
+
+</html>
