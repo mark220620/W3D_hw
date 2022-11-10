@@ -1,12 +1,654 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>hw3</title>
+    <style>
+        #info {
+            position: absolute;
+            top: 0px;
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+            color: #095883;
+        }
+
+        body {
+            overflow: hidden;
+        }
+    </style>
 </head>
+
 <body>
-    
+    <div id="info"><a href="https://i.imgur.com/wkMh9O6.jpg">floor plan</a><br>
+        <button id='switch'>use far eye
+        </button>
+        <input type=range min=50 max=200 id='light'>brightness<br>
+    </div>
+
+    <script src="https://threejs.org/build/three.min.js"></script>
+    <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+
+    <script>
+        var camera, scene, renderer;
+        var spotLight;
+        var useBirdEye = true;
+        var cameraHelper;
+        var brightness;
+        $('#switch').click(function () {
+            useBirdEye = !useBirdEye;
+            if (useBirdEye)
+                $('#switch').text('use far eye');
+            else
+                $('#switch').text('use orbit');
+        })
+
+        class Light {
+            constructor(x, y, z, painting) {
+                // lighting 
+
+                this.spotLight = new THREE.SpotLight(0xffffff, brightness, 400, Math.PI / 6, 1);
+                this.spotLight.position.set(x, y, z);
+                this.spotLight.target = painting;
+                scene.add(this.spotLight);
+                // lampGroup
+                var lampGroup = new THREE.Group();
+                var lamp = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 20, 20), new THREE.MeshLambertMaterial());
+                lamp.rotation.x = Math.PI / 2;
+                lamp.position.set(0, 0, 10);
+                lampGroup.add(lamp);
+                scene.add(lampGroup);
+                lampGroup.position.copy(this.spotLight.position);
+                lampGroup.lookAt(painting.position);
+            }
+            change(value) {
+                this.spotLight.intensity = value;
+            }
+        }
+        $('#light').change(function () {
+            brightness = ($(this).val()) / 100;
+            //console.log(brightness);
+            lamps.forEach(function (item) { item.change(brightness); });
+        })
+        init();
+        animate();
+
+        function init() {
+
+            scene = new THREE.Scene();
+
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x888888);
+            document.body.appendChild(renderer.domElement);
+
+            camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
+            camera.position.set(0, 2200, 0);
+            //camera.position.z = 800; // camera at (0,0,500)
+            let controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+            ////////////////////////////////////////////////////////
+
+
+            eyeCamera = new THREE.PerspectiveCamera(120, window.innerWidth / window.innerHeight, 1, 10000);
+
+            var gridXZ = new THREE.GridHelper(1500, 50, 'red', 'white');
+            //scene.add(gridXZ);
+
+            // layout
+            var wallFrontSide1 = new THREE.Mesh(new THREE.BoxGeometry(10, 300, 400), new THREE.MeshLambertMaterial());
+            wallFrontSide1.position.set(550, 150, 450);
+            wallFrontSide1.rotation.y = Math.PI / 2;
+            var wallFrontSide2 = new THREE.Mesh(new THREE.BoxGeometry(10, 300, 1000), new THREE.MeshLambertMaterial());
+            wallFrontSide2.position.set(-244, 150, 450);
+            wallFrontSide2.rotation.y = Math.PI / 2;
+
+            var wallBackSide = new THREE.Mesh(new THREE.BoxGeometry(10, 300, 1500), new THREE.MeshLambertMaterial());
+            wallBackSide.position.set(0, 150, -750);
+            wallBackSide.rotation.y = Math.PI / 2;
+
+            var wallDoorRight = new THREE.Mesh(new THREE.BoxGeometry(10, 300, 120), new THREE.MeshLambertMaterial());
+            wallDoorRight.position.set(400, 150, 384);
+            var wallDoorBackRight = new THREE.Mesh(new THREE.BoxGeometry(50, 300, 10), new THREE.MeshLambertMaterial());
+            wallDoorBackRight.position.set(400, 150, 320);
+            var wallDoorBackLeft = new THREE.Mesh(new THREE.BoxGeometry(50, 300, 10), new THREE.MeshLambertMaterial());
+            wallDoorBackLeft.position.set(230, 150, 320);
+            var wallDoorLeft = new THREE.Mesh(new THREE.BoxGeometry(10, 300, 120), new THREE.MeshLambertMaterial());
+            wallDoorLeft.position.set(230, 150, 384);
+            var wallRightSide = new THREE.Mesh(new THREE.BoxGeometry(10, 300, 1200), new THREE.MeshLambertMaterial());
+            wallRightSide.position.set(750, 150, -150);
+
+
+            var wallLeftSide = new THREE.Mesh(new THREE.BoxGeometry(10, 300, 1200), new THREE.MeshLambertMaterial());
+            wallLeftSide.position.set(-750, 150, -150);
+
+            var wallRoomABbetween2 = new THREE.Mesh(new THREE.BoxGeometry(70, 300, 10), new THREE.MeshLambertMaterial());
+            wallRoomABbetween2.position.set(709, 150, -100);
+
+            var wallRoomBC = new THREE.Mesh(new THREE.BoxGeometry(10, 300, 700), new THREE.MeshLambertMaterial());
+            wallRoomBC.position.set(370, 150, -400);
+
+            var wallRoomABbetween1 = new THREE.Mesh(new THREE.BoxGeometry(70, 300, 10), new THREE.MeshLambertMaterial());
+            wallRoomABbetween1.position.set(400, 150, -100);
+
+
+            var wallRoomCD = new THREE.Mesh(new THREE.BoxGeometry(10, 300, 500), new THREE.MeshLambertMaterial());
+            wallRoomCD.position.set(0, 150, -490);
+
+            var wallRoomCdoor = new THREE.Mesh(new THREE.BoxGeometry(200, 300, 10), new THREE.MeshLambertMaterial());
+            wallRoomCdoor.position.set(265, 150, -250);
+
+            var wallRoomCDdoor = new THREE.Mesh(new THREE.BoxGeometry(70, 300, 10), new THREE.MeshLambertMaterial());
+            wallRoomCDdoor.position.set(0, 150, -250);
+
+            var wallRoomDE = new THREE.Mesh(new THREE.BoxGeometry(10, 300, 530), new THREE.MeshLambertMaterial());
+            wallRoomDE.position.set(-320, 150, -480);
+
+            var wallRoomDdoor = new THREE.Mesh(new THREE.BoxGeometry(150, 300, 10), new THREE.MeshLambertMaterial());
+            wallRoomDdoor.position.set(-240, 150, -250);
+
+            var wallRoomGH = new THREE.Mesh(new THREE.BoxGeometry(10, 300, 500), new THREE.MeshLambertMaterial());
+            wallRoomGH.position.set(-320, 150, 190);
+
+            var wallRoomH = new THREE.Mesh(new THREE.BoxGeometry(500, 300, 10), new THREE.MeshLambertMaterial());
+            wallRoomH.position.set(-70, 150, -20);
+
+            var wallDoorH = new THREE.Mesh(new THREE.BoxGeometry(10, 300, 70), new THREE.MeshLambertMaterial());
+            wallDoorH.position.set(180, 150, 10);
+
+            var wallRoomEFbetween1 = new THREE.Mesh(new THREE.BoxGeometry(70, 300, 10), new THREE.MeshLambertMaterial());
+            wallRoomEFbetween1.position.set(-350, 150, -400);
+
+            var wallRoomEFbetween2 = new THREE.Mesh(new THREE.BoxGeometry(70, 300, 10), new THREE.MeshLambertMaterial());
+            wallRoomEFbetween2.position.set(-710, 150, -400);
+
+            var wallRoomFGbetween1 = new THREE.Mesh(new THREE.BoxGeometry(70, 300, 10), new THREE.MeshLambertMaterial());
+            wallRoomFGbetween1.position.set(-350, 150, 0);
+
+            var wallRoomFGbetween2 = new THREE.Mesh(new THREE.BoxGeometry(70, 300, 10), new THREE.MeshLambertMaterial());
+            wallRoomFGbetween2.position.set(-710, 150, 0);
+
+
+            scene.add(wallFrontSide1, wallFrontSide2, wallRightSide, wallRoomABbetween2, wallDoorRight, wallDoorLeft, wallDoorBackRight, wallDoorBackLeft, wallBackSide, wallLeftSide, wallRoomBC, wallRoomABbetween1, wallRoomCD, wallRoomCdoor, wallRoomCDdoor, wallRoomDE, wallRoomDdoor, wallRoomGH, wallRoomH, wallDoorH, wallRoomEFbetween1, wallRoomEFbetween2, wallRoomFGbetween1, wallRoomFGbetween2);
+
+
+            // floor
+            var loader = new THREE.TextureLoader();
+            var woodTex = loader.load("https://i.imgur.com/ahJLRTt.jpg");
+            woodTex.repeat.set(1, 1);
+            woodTex.wrapS = THREE.RepeatWrapping;
+            var plane = new THREE.Mesh(new THREE.PlaneGeometry(1500, 1500), new THREE.MeshBasicMaterial({
+                map: woodTex
+            }))
+            plane.rotation.x = -Math.PI / 2;
+            scene.add(plane);
+            // eyeCamera
+            cameraHelper = makeCameraHelper();
+            //scene.add(cameraHelper);
+            eyeCamera.position.set(0, 1000, 600);
+            eyeCamera.lookAt(0, 0, 0);
+
+            // drawing
+            //A room
+            var herni1 = loader.load('https://i.imgur.com/hZA4rlY.jpg');
+            var paintingA1 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
+                map: herni1
+            }));
+            paintingA1.position.set(739, 170, 150);
+            paintingA1.rotation.y = -Math.PI / 2;
+            var herni2 = loader.load('https://i.imgur.com/LzckZQn.jpg');
+            var paintingA2 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
+                map: herni2
+            }));
+            paintingA2.position.set(570, 170, 439);
+            paintingA2.rotation.y = Math.PI;
+            //B room
+            var monet1 = loader.load('https://i.imgur.com/1xTk5NQ.jpg');
+            var paintingB1 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
+                map: monet1
+            }));
+            paintingB1.position.set(739, 170, -400);
+            paintingB1.rotation.y = -Math.PI / 2;
+
+            var monet2 = loader.load('https://i.imgur.com/OhdIX17.jpg');
+            var paintingB2 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
+                map: monet2
+            }));
+            paintingB2.position.set(569, 170, -739);
+            var monet3 = loader.load('https://i.imgur.com/8wsW0Go.jpg');
+            var paintingB3 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
+                map: monet3
+            }));
+            paintingB3.position.set(379, 170, -580);
+            paintingB3.rotation.y = Math.PI / 2;
+            var monet4 = loader.load('https://i.imgur.com/PFS2q8p.jpg');
+            var paintingB4 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
+                map: monet4
+            }));
+            paintingB4.position.set(379, 170, -300);
+            paintingB4.rotation.y = Math.PI / 2;
+
+            // C room
+            var salvador1 = loader.load('https://i.imgur.com/kON5Oqw.jpg');
+            var paintingC1 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
+                map: salvador1
+            }));
+            paintingC1.position.set(359, 170, -450);
+            paintingC1.rotation.y = -Math.PI / 2;
+
+            var salvador2 = loader.load('https://i.imgur.com/EiW0CIV.jpg');
+            var paintingC2 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
+                map: salvador2
+            }));
+            paintingC2.position.set(190, 170, -739);
+
+            var salvador3 = loader.load('https://i.imgur.com/dnwG8kJ.jpg');
+            var paintingC3 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
+                map: salvador3
+            }));
+            paintingC3.position.set(9, 170, -450);
+            paintingC3.rotation.y = Math.PI / 2;
+            //D room
+            var keith1 = loader.load('https://i.imgur.com/aoYWTR4.jpg');
+            var paintingD1 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
+                map: keith1
+            }));
+            paintingD1.position.set(-9, 170, -450);
+            paintingD1.rotation.y = -Math.PI / 2;
+
+            var keith2 = loader.load('https://i.imgur.com/i8cBXqb.jpg');
+            var paintingD2 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
+                map: keith2
+            }));
+            paintingD2.position.set(-150, 170, -739);
+
+            var keith3 = loader.load('https://i.imgur.com/aTdxSfI.jpg');
+            var paintingD3 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
+                map: keith3
+            }));
+            paintingD3.position.set(-311, 170, -450);
+            paintingD3.rotation.y = Math.PI / 2;
+
+            //E room
+            var mirka1 = loader.load('https://i.imgur.com/gIsbtix.jpg');
+            var paintingE1 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
+                map: mirka1
+            }));
+            paintingE1.position.set(-329, 170, -560);
+            paintingE1.rotation.y = -Math.PI / 2;
+
+            var mirka2 = loader.load('https://i.imgur.com/kB6368c.jpg');
+            var paintingE2 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
+                map: mirka2
+            }));
+            paintingE2.position.set(-550, 170, -739);
+
+            var mirka3 = loader.load('https://i.imgur.com/gIsbtix.jpg');
+            var paintingE3 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
+                map: mirka3
+            }));
+            paintingE3.position.set(-741, 170, -560);
+            paintingE3.rotation.y = Math.PI / 2;
+
+            //F room
+            var bird = loader.load('https://i.imgur.com/xYKmvGX.png');
+            var paintingF1 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
+                map: bird,
+                transparent: true
+            }));
+            paintingF1.position.set(-741, 220, -140);
+            paintingF1.rotation.y = Math.PI / 2;
+
+            //G room
+            var david1 = loader.load('https://i.imgur.com/thlfMcN.jpg');
+            var paintingG1 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
+                map: david1
+            }));
+            paintingG1.position.set(-333, 170, 200);
+            paintingG1.rotation.y = -Math.PI / 2;
+
+            var david2 = loader.load('https://i.imgur.com/ZZnRv4l.jpg');
+            var paintingG2 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
+                map: david2
+            }));
+            paintingG2.position.set(-550, 170, 441);
+            paintingG2.rotation.y = Math.PI;
+
+            var david3 = loader.load('https://i.imgur.com/xH1Oj22.jpg');
+            var paintingG3 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
+                map: david3
+            }));
+            paintingG3.position.set(-741, 170, 200);
+            paintingG3.rotation.y = Math.PI / 2;
+
+            //H room
+            var van1 = loader.load('https://i.imgur.com/SmHseu1.jpg');
+            var paintingH1 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
+                map: van1
+            }));
+            paintingH1.position.set(50, 170, -11);
+
+            var van2 = loader.load('https://i.imgur.com/TeISNC9.jpg');
+            var paintingH2 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
+                map: van2
+            }));
+            paintingH2.position.set(-170, 170, -11);
+
+            var van3 = loader.load('https://i.imgur.com/bDXTEDq.jpg');
+            var paintingH3 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
+                map: van3
+            }));
+            paintingH3.position.set(-311, 170, 200)
+            paintingH3.rotation.y = Math.PI / 2;
+
+            var van4 = loader.load('https://i.imgur.com/kqMRSoU.jpg');
+            var paintingH4 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
+                map: van4
+            }));
+            paintingH4.position.set(50, 170, 441);
+            paintingH4.rotation.y = Math.PI;
+
+            var van5 = loader.load('https://i.imgur.com/yqIbNs1.jpg');
+            var paintingH5 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
+                map: van5
+            }));
+            paintingH5.position.set(-170, 170, 441);
+            paintingH5.rotation.y = Math.PI;
+            scene.add(paintingA1, paintingA2, paintingB1, paintingB2, paintingB3, paintingB4, paintingC1, paintingC2, paintingC3, paintingD1, paintingD2, paintingD3, paintingE1, paintingE2, paintingE3, paintingF1, paintingG1, paintingG2, paintingG3, paintingH1, paintingH2, paintingH3, paintingH4, paintingH5);
+
+            // lighting
+            var light1 = new Light(450, 300, 150, paintingA1);
+            var light2 = new Light(570, 300, 150, paintingA2);
+            var light3 = new Light(460, 300, -400, paintingB1)
+            var light4 = new Light(570, 300, -450, paintingB2);
+            var light5 = new Light(600, 300, -460, paintingB3);
+            var light6 = new Light(600, 300, -440, paintingB4);
+            var light7 = new Light(100, 300, -450, paintingC1);
+            var light8 = new Light(190, 300, -450, paintingC2);
+            var light9 = new Light(300, 300, -450, paintingC3);
+            var light10 = new Light(-250, 300, -450, paintingD1);
+            var light11 = new Light(-150, 300, -450, paintingD2);
+            var light12 = new Light(-50, 300, -450, paintingD3);
+            var light13 = new Light(-600, 300, -500, paintingE1);
+            var light14 = new Light(-550, 300, -470, paintingE2);
+            var light15 = new Light(-450, 300, -500, paintingE3);
+            var light16 = new Light(-600, 300, 200, paintingG1);
+            var light17 = new Light(-550, 300, 190, paintingG2);
+            var light18 = new Light(-450, 300, 200, paintingG3);
+            var light19 = new Light(50, 300, 260, paintingH1);
+            var light20 = new Light(-100, 300, 260, paintingH2);
+            var light21 = new Light(-20, 300, 260, paintingH3);
+            var light22 = new Light(50, 300, 180, paintingH4);
+            var light23 = new Light(-100, 300, 180, paintingH5);
+
+            lamps = [];
+            lamps.push(light1, light2, light3, light4, light5, light6, light7, light8, light9, light10, light11, light12, light13, light14, light15, light16, light17, light18, light19, light20, light21, light22, light23);
+            spotLightHelper = new THREE.SpotLightHelper(light7.spotLight);
+            //scene.add(spotLightHelper);
+            // frame
+            let frameMap = loader.load('https://i.imgur.com/4TEUnD6.png');
+            var frame = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshBasicMaterial({
+                map: frameMap,
+                transparent: true
+            }));
+            var frameA1 = frame.clone();
+            frameA1.position.set(740, 170, 150);
+            frameA1.rotation.y = -Math.PI / 2;
+            var frameA2 = frame.clone();
+            frameA2.position.set(570, 170, 440);
+            frameA2.rotation.y = Math.PI;
+            var frameB1 = frame.clone();
+            frameB1.position.set(740, 170, -400);
+            frameB1.rotation.y = -Math.PI / 2;
+
+            var frameB2 = frame.clone();
+            frameB2.position.set(570, 170, -740);
+
+            var frameB3 = frame.clone();
+            frameB3.position.set(380, 170, -580);
+            frameB3.rotation.y = Math.PI / 2;
+
+            var frameB4 = frame.clone();
+            frameB4.position.set(380, 170, -300);
+            frameB4.rotation.y = Math.PI / 2;
+
+            var frameC1 = frame.clone();
+            frameC1.position.set(360, 170, -450);
+            frameC1.rotation.y = -Math.PI / 2;
+
+            var frameC2 = frame.clone();
+            frameC2.position.set(190, 170, -740);
+
+            var frameC3 = frame.clone();
+            frameC3.position.set(10, 170, -450);
+            frameC3.rotation.y = Math.PI / 2;
+
+            var frameD1 = frame.clone();
+            frameD1.position.set(-10, 170, -450);
+            frameD1.rotation.y = -Math.PI / 2;
+
+            var frameD2 = frame.clone();
+            frameD2.position.set(-150, 170, -740);
+
+            var frameD3 = frame.clone();
+            frameD3.position.set(-312, 170, -450);
+            frameD3.rotation.y = Math.PI / 2;
+
+            var frameE1 = frame.clone();
+            frameE1.position.set(-330, 170, -560);
+            frameE1.rotation.y = -Math.PI / 2;
+
+            var frameE2 = frame.clone();
+            frameE2.position.set(-550, 170, -740);
+
+            var frameE3 = frame.clone();
+            frameE3.position.set(-740, 170, -560);
+            frameE3.rotation.y = Math.PI / 2;
+
+            var frameG1 = frame.clone();
+            frameG1.position.set(-330, 170, 200);
+            frameG1.rotation.y = -Math.PI / 2;
+
+            var frameG2 = frame.clone();
+            frameG2.position.set(-550, 170, 440);
+            frameG2.rotation.y = Math.PI;
+
+            var frameG3 = frame.clone();
+            frameG3.position.set(-740, 170, 200);
+            frameG3.rotation.y = Math.PI / 2;
+
+            var frameH1 = frame.clone();
+            frameH1.position.set(50, 170, -10);
+
+            var frameH2 = frame.clone();
+            frameH2.position.set(-170, 170, -10);
+
+            var frameH3 = frame.clone();
+            frameH3.position.set(-310, 170, 200)
+            frameH3.rotation.y = Math.PI / 2;
+
+            var frameH4 = frame.clone();
+            frameH4.position.set(50, 170, 440);
+            frameH4.rotation.y = Math.PI;
+
+            var frameH5 = frame.clone();
+            frameH5.position.set(-170, 170, 440);
+            frameH5.rotation.y = Math.PI;
+
+            scene.add(frameA1, frameA2, frameB1, frameB2, frameB3, frameB4, frameC1, frameC2, frameC3, frameD1, frameD2, frameD3, frameE1, frameE2, frameE3, frameG1, frameG2, frameG3, frameH1, frameH2, frameH3, frameH4, frameH5);
+
+            // chair
+            var chair = buildChair();
+            var chairInH = chair.clone();
+            chairInH.position.set(-60, 5, 180);
+            chairInH.rotation.y = -Math.PI / 2;
+            var chairInG = chair.clone();
+            chairInG.position.set(-540, 5, 200);
+            chairInG.rotation.y = -Math.PI / 2;
+            var chairInE = chair.clone();
+            chairInE.position.set(-540, 5, -550);
+            chairInE.rotation.y = -Math.PI / 2;
+            var chairInA = chair.clone();
+            chairInA.position.set(600, 5, 180);
+            chairInA.rotation.y = -Math.PI / 2;
+            var chairInB = chair.clone();
+            chairInB.position.set(600, 5, -400);
+            chairInB.rotation.y = -Math.PI / 2;
+            scene.add(chairInH, chairInG, chairInE, chairInA, chairInB);
+
+            const TorusKnot = new THREE.TorusKnotGeometry(50, 15, 100, 16);
+            var woodTex = new THREE.TextureLoader().load("https://i.imgur.com/IRjQYEn.jpg");
+            const material = new THREE.MeshLambertMaterial({
+                map: woodTex
+            })
+            const torus = new THREE.Mesh(TorusKnot, material);
+            torus.position.set(-550, 110, -140);
+
+            var box = new THREE.Mesh(new THREE.BoxGeometry(50, 20, 50), new THREE.MeshBasicMaterial({
+                color: 0xececec
+            }));
+            box.position.set(-550, 20, -140);
+            scene.add(torus, box);
+
+
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+            var directionalLight1 = directionalLight.clone();
+            var directionalLight2 = directionalLight.clone();
+            var directionalLight3 = directionalLight.clone();
+            var directionalLight4 = directionalLight.clone();
+            var directionalLight5 = directionalLight.clone();
+            directionalLight1.position.set(-1500, 310, 0);
+            directionalLight1.target = wallRightSide;
+            directionalLight2.position.set(1500, 310, 0);
+            directionalLight2.target = wallLeftSide;
+            directionalLight3.position.set(0, 310, 1500)
+            directionalLight3.target = wallBackSide;
+            directionalLight4.position.set(0, 310, -1500);
+            directionalLight4.target = wallFrontSide2;
+            directionalLight5.position.set(0, 350, 0);
+            scene.add(directionalLight1, directionalLight2, directionalLight3, directionalLight4, directionalLight5);
+            //scene.add(spotLightToB1, spotLightToB2);
+
+            // H room
+            var track1 = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 180, 32), new THREE.MeshLambertMaterial());
+            scene.add(track1);
+            track1.rotation.z = Math.PI/2;
+            track1.position.set(-20, 320, 190);
+
+            var track2 = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 180, 32), new THREE.MeshLambertMaterial());
+            scene.add(track2);
+            track2.rotation.z = Math.PI/2;
+            track2.position.set(-20, 320, 250);
+            var track3 = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 60, 32), new THREE.MeshLambertMaterial());
+            scene.add(track3);
+            track3.rotation.z = Math.PI/2;
+            track3.rotation.y = Math.PI/2;
+            track3.position.set(-100, 320, 220);
+            var track4 = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 60, 32), new THREE.MeshLambertMaterial());
+            scene.add(track4);
+            track4.rotation.z = Math.PI/2;
+            track4.rotation.y = Math.PI/2;
+            track4.position.set(60, 320, 220);
+
+            // EFG room
+            var track5 = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 140, 32), new THREE.MeshLambertMaterial());
+            scene.add(track5);
+            track5.rotation.z = Math.PI/2;
+            track5.position.set(-520, 320, -500);
+
+            var track6 = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 140, 32), new THREE.MeshLambertMaterial());
+            scene.add(track6);
+            track6.rotation.z = Math.PI/2;
+            track6.position.set(-520, 320, 200);
+            var track7 = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 720, 32), new THREE.MeshLambertMaterial());
+            scene.add(track7);
+            track7.rotation.z = Math.PI/2;
+            track7.rotation.y = Math.PI/2;
+            track7.position.set(-590, 320, -150);
+            var track8 = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 720, 32), new THREE.MeshLambertMaterial());
+            scene.add(track8);
+            track8.rotation.z = Math.PI/2;
+            track8.rotation.y = Math.PI/2;
+            track8.position.set(-460, 320, -150);
+
+            //AB room
+            var track9 = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 140, 32), new THREE.MeshLambertMaterial());
+            scene.add(track9);
+            track9.rotation.z = Math.PI/2;
+            track9.position.set(520, 320, -500);
+
+            var track10 = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 140, 32), new THREE.MeshLambertMaterial());
+            scene.add(track10);
+            track10.rotation.z = Math.PI/2;
+            track10.position.set(520, 320, 200);
+            var track11 = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 720, 32), new THREE.MeshLambertMaterial());
+            scene.add(track11);
+            track11.rotation.z = Math.PI/2;
+            track11.rotation.y = Math.PI/2;
+            track11.position.set(590, 320, -150);
+            var track12 = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 720, 32), new THREE.MeshLambertMaterial());
+            scene.add(track12);
+            track12.rotation.z = Math.PI/2;
+            track12.rotation.y = Math.PI/2;
+            track12.position.set(460, 320, -150);
+
+            // CD room
+            var track13 = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 650, 32), new THREE.MeshLambertMaterial());
+            scene.add(track13);
+            track13.rotation.z = Math.PI/2;
+            //track13.rotation.y = Math.PI/2;
+            track13.position.set(20, 320, -460);
+            var track14 = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 720, 32), new THREE.MeshLambertMaterial());
+            scene.add(track14);
+            track14.rotation.z = Math.PI/2;
+            track14.rotation.y = Math.PI/2;
+            track14.position.set(460, 320, -150);
+        }
+
+        function makeCameraHelper() {
+            var cameraModel = new THREE.Group();
+            var body = new THREE.Mesh(new THREE.BoxGeometry(100, 60, 30), new THREE.MeshNormalMaterial());
+            cameraModel.add(body);
+
+            return cameraModel;
+        }
+
+        function buildChair() {
+            var group = new THREE.Group();
+            var woodTex = new THREE.TextureLoader().load("https://i.imgur.com/0VsfsMn.jpg");
+            var mat = new THREE.MeshLambertMaterial({
+                map: woodTex
+            });
+            var boxTop = new THREE.Mesh(new THREE.BoxGeometry(120, 20, 60), mat);
+            var boxLeg1 = new THREE.Mesh(new THREE.BoxGeometry(20, 40, 60), mat);
+            var boxLeg2 = new THREE.Mesh(new THREE.BoxGeometry(20, 40, 60), mat);
+            boxTop.position.set(0, 25, 0);
+            boxLeg1.position.set(-50, 10, 0);
+            boxLeg2.position.set(50, 10, 0);
+            group.add(boxTop, boxLeg1, boxLeg2);
+            return group;
+        }
+
+        function animate() {
+
+            requestAnimationFrame(animate);
+            cameraHelper.position.copy(eyeCamera.position);
+            cameraHelper.quaternion.copy(eyeCamera.quaternion);
+            if (useBirdEye) {
+                renderer.render(scene, eyeCamera);
+            } else {
+                renderer.render(scene, camera);
+            }
+            spotLightHelper.update();
+
+        }
+
+    </script>
 </body>
+
 </html>
