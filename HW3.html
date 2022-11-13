@@ -27,6 +27,32 @@
         <button id='switch'>use far eye
         </button>
         <input type=range min=50 max=200 id='light'>brightness<br>
+        <select id = 'paint'>
+            <option value="A1">A1</option>
+            <option value="A2">A2</option>
+            <option value="B1">B1</option>
+            <option value="B2">B2</option>
+            <option value="B3">B3</option>
+            <option value="B4">B4</option>
+            <option value="C1">C1</option>
+            <option value="C2">C2</option>
+            <option value="C3">C3</option>
+            <option value="D1">D1</option>
+            <option value="D2">D2</option>
+            <option value="D3">D3</option>
+            <option value="E1">E1</option>
+            <option value="E2">E2</option>
+            <option value="E3">E3</option>
+            <option value="G1">G1</option>
+            <option value="G2">G2</option>
+            <option value="G3">G3</option>
+            <option value="H1">H1</option>
+            <option value="H2">H2</option>
+            <option value="H3">H3</option>
+            <option value="H4">H4</option>
+            <option value="H5">H5</option>
+            
+        </select>
     </div>
 
     <script src="https://threejs.org/build/three.min.js"></script>
@@ -77,6 +103,7 @@
         init();
         animate();
 
+        
         function init() {
 
             scene = new THREE.Scene();
@@ -189,8 +216,103 @@
             // eyeCamera
             cameraHelper = makeCameraHelper();
             //scene.add(cameraHelper);
-            eyeCamera.position.set(0, 1000, 600);
-            eyeCamera.lookAt(0, 0, 0);
+            $('#paint').change(function() {
+                if ($(this).val() === "A1") {
+                    eyeCamera.position.set(650, 150, 180);
+                    eyeCamera.lookAt(700, 150, 180);
+                }
+                if ($(this).val() === "A2") {
+                    eyeCamera.position.set(570, 150, 350);
+                    eyeCamera.lookAt(570, 150, 480);
+                }
+                if ($(this).val() === "B1") {
+                    eyeCamera.position.set(640, 170, -400);
+                    eyeCamera.lookAt(740, 170, -400);
+                }
+                if ($(this).val() === "B2") {
+                    eyeCamera.position.set(600, 170, -640);
+                    eyeCamera.lookAt(600, 170, -700);
+                }
+                if ($(this).val() === "B3") {
+                    eyeCamera.position.set(480, 170, -600);
+                    eyeCamera.lookAt(0, 170, -600);
+                }
+                if ($(this).val() === "B4") {
+                    eyeCamera.position.set(480, 170, -300);
+                    eyeCamera.lookAt(0, 170, -300);
+                }
+                if ($(this).val() === "C1") {
+                    eyeCamera.position.set(260, 170, -450);
+                    eyeCamera.lookAt(360, 170, -450);
+                }
+                if ($(this).val() === "C2") {
+                    eyeCamera.position.set(190, 170, -620);
+                    eyeCamera.lookAt(190, 170, -650);
+                }
+                if ($(this).val() === "C3") {
+                    eyeCamera.position.set(110, 170, -450);
+                    eyeCamera.lookAt(-10, 170, -450);
+                }
+                if ($(this).val() === "D1") {
+                    eyeCamera.position.set(-110, 170, -450);
+                    eyeCamera.lookAt(20, 170, -450);
+                }
+                if ($(this).val() === "D2") {
+                    eyeCamera.position.set(-130, 170, -640);
+                    eyeCamera.lookAt(-130, 170, -650);
+                }
+                if ($(this).val() === "D3") {
+                    eyeCamera.position.set(-210, 170, -450);
+                    eyeCamera.lookAt(-220, 170, -450);
+                }
+                if ($(this).val() === "E1") {
+                    eyeCamera.position.set(-430, 170, -560);
+                    eyeCamera.lookAt(0, 170, -560);
+                }
+                if ($(this).val() === "E2") {
+                    eyeCamera.position.set(-550, 170, -630);
+                    eyeCamera.lookAt(-550, 170, -631);
+                }
+                if ($(this).val() === "E3") {
+                    eyeCamera.position.set(-640, 170, -560);
+                    eyeCamera.lookAt(-680, 170, -560);
+                }
+                if ($(this).val() === "G1") {
+                    eyeCamera.position.set(-430, 170, 200);
+                    eyeCamera.lookAt(0, 170, 200);
+                }
+                if ($(this).val() === "G2") {
+                    eyeCamera.position.set(-550, 170, 340);
+                    eyeCamera.lookAt(-550, 170, 400);
+                }
+                if ($(this).val() === "G3") {
+                    eyeCamera.position.set(-640, 170, 200);
+                    eyeCamera.lookAt(-680, 170, 200);
+                }
+                if ($(this).val() === "H1") {
+                    eyeCamera.position.set(50, 170, 70);
+                    eyeCamera.lookAt(50, 170, -10);
+                }
+                if ($(this).val() === "H2") {
+                    eyeCamera.position.set(-130, 170, 70);
+                    eyeCamera.lookAt(-130, 170, -10);
+                }
+                if ($(this).val() === "H3") {
+                    eyeCamera.position.set(-200, 170, 200);
+                    eyeCamera.lookAt(-311, 170, 200);
+                }
+                if ($(this).val() === "H4") {
+                    eyeCamera.position.set(50, 170, 360);
+                    eyeCamera.lookAt(50, 170, 441);
+                }
+                if ($(this).val() === "H5") {
+                    eyeCamera.position.set(-150, 170, 360);
+                    eyeCamera.lookAt(-150, 170, 441);
+                }
+        });
+        
+            eyeCamera.position.set(650, 150, 180);
+            eyeCamera.lookAt(700, 150, 180);
 
             // drawing
             //A room
@@ -508,9 +630,7 @@
             const torus = new THREE.Mesh(TorusKnot, material);
             torus.position.set(-550, 110, -140);
 
-            var box = new THREE.Mesh(new THREE.BoxGeometry(50, 20, 50), new THREE.MeshBasicMaterial({
-                color: 0xececec
-            }));
+            var box = new THREE.Mesh(new THREE.BoxGeometry(50, 20, 50), new THREE.MeshLambertMaterial());
             box.position.set(-550, 20, -140);
             scene.add(torus, box);
 
