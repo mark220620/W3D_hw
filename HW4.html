@@ -41,7 +41,7 @@
     <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
     
     <script type = "module">
-        import * as BufferGeometryUtils from "/modules/BufferGeometrtUtils.js";
+        import * as BufferGeometryUtils from './modules/BufferGeometrtUtils.js';
         $('.function').click(function () {
             if ($(this).val() === 'place') {
                 placing = true;
@@ -286,18 +286,13 @@
             var chairQQ = new THREE.Group();
             chairQQ.add(chairHand1, chairHand2, chairBottom, chairBack, chairBack1, chairBack2, chairBack3, chairBack4, chairLeg1, chairLeg2, chairLeg3, chairLeg4);
 
-            const feet = new THREE.SphereBufferGeometrt(16,32,32);
-            feet.translater(0,0,0);
-
-            const body = new THREE.SphereBufferGeometrt(10,24,24);
-            feet.translater(0,23,0);
-
-            const snowmanG = BufferGeometryUtils.mergeBufferGeometries([feet,body]);
-            const snowman = new THREE.Mesh(
-                snowmanG,
-                new THREE.MeshBasicMaterial({color:'black'})
-            )
-            return snowman;
+            let geometryArray = [];
+            let materialArray = [];
+            geometryArray.push(chairBack1,chairBack2);
+            const mergedGeometries = BufferGeometryUtils.mergeBufferGeometries(geometryArray,true);
+            const singleMergeMesh = new THREE.Mesh(mergedGeometries,materialArray);
+            
+            return singleMergeMesh;
         }
 
         function buildTable() {
