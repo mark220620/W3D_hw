@@ -37,10 +37,11 @@
     </div>
 
     <<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="https://threejs.org/build/three.min.js"></script>
-    <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+    <!--<script src="https://threejs.org/build/three.min.js"></script>
+    <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>-->
     
     <script type = "module">
+        import * as THREE from 'three'
         import * as BufferGeometryUtils from './modules/BufferGeometryUtils.js';
         $('.function').click(function () {
             if ($(this).val() === 'place') {
