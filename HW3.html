@@ -63,9 +63,9 @@
                 var brightness;
                 ////////////////
                 var paintMove, alpha = 0;
-                var sensorAH, sensorB, sensorC, sensorD, sensorF, paintNo = 'Z1',
+                var sensorAH, sensorB, sensorC, sensorD, sensorF, sensorR, paintNo = 'Z1',
                     lookA1, lookA2, lookB1, lookB2, lookB3, lookB4, lookC1, lookC2, lookC3, lookD1, lookD2, lookD3, lookE1, lookE2, lookE3, lookG1, lookG2, lookG3, lookH1, lookH2, lookH3, lookH4, lookH5;
-
+                var goal;
                 $("#paint").change(function () {
                     paintNo = $('#paint option:selected').val();
                 });
@@ -612,6 +612,8 @@
 
                     // chair
                     var chair = buildChair();
+
+                    goal = chair.clone();
                     sensorAH = chair.clone();
                     sensorAH.position.set(300, 150, 180);
                     sensorAH.rotation.y = -Math.PI / 2;
@@ -631,6 +633,10 @@
                     sensorF = chair.clone();
                     sensorF.position.set(-400, 150, -140);
                     sensorF.rotation.y = -Math.PI / 2;
+
+                    sensorR = chair.clone();
+                    sensorR.position.set(300, 150, -80);
+                    sensorR.rotation.y = -Math.PI / 2;
 
                     var chairInC = chair.clone();
                     chairInC.position.set(190, 5, -460)
@@ -767,6 +773,8 @@
                     track14.rotation.z = Math.PI / 2;
                     track14.rotation.y = Math.PI / 2;
                     track14.position.set(460, 320, -150);
+                    
+
                 }
 
                 function makeCameraHelper() {
@@ -798,10 +806,23 @@
                     group.add(boxTop, boxLeg1, boxLeg2);
                     return group;
                 }
+                function sensor() {
+                    if (paintNo === 'A1' || paintNo === 'A2') {
+                        goal = sensorAH;
+                    }
 
+                    if (paintNo === 'B1' || paintNo === 'B2')
+                        goal = sensorB;
+
+                    if (paintNo === 'C1' || paintNo === 'C2')
+                        goal = sensorC;
+                    paintMove.position.lerpVectors(paintMove.clone().position, sensorAH.position, alpha);
+                    paintMove.quaternion.slerpQuaternions(paintMove.clone().quaternion, sensorAH.quaternion, alpha);
+                }
+                var check = 0;
                 function animate() {
 
-                    alpha += 0.0005;
+                    alpha += 0.00005;
                     alpha = clamp(alpha, 0, 1);
                     requestAnimationFrame(animate);
                     //renderer.render(scene, camera);
@@ -812,152 +833,279 @@
 
                     } else {
                         renderer.render(scene, paintMove);
-                        paintMove = paintMove.clone();
+
                         if (paintNo === 'A1') {
 
-                            
-                            
-                                paintMove.position.lerpVectors(paintMove.position, lookA1.position, alpha);
-                                paintMove.quaternion.slerpQuaternions(paintMove.quaternion, lookA1.quaternion, alpha);
-                           
-                        }
+                            goal = sensorAH;
+                            if (Math.round(paintMove.position.x) >= sensorAH.position.x) {
 
-                        
+                                goal = lookA1;
+                            }
+
+                            paintMove.position.lerpVectors(paintMove.clone().position, goal.position, alpha);
+                            paintMove.quaternion.slerpQuaternions(paintMove.clone().quaternion, goal.quaternion, alpha);
+
+
+                        }
                         if (paintNo === 'A2') {
-                            paintMove.position.lerpVectors(paintMove.position, lookA2.position, alpha);
-                            //paintMove.position.lerpVectors(paintMove.position, sensorAH.position, alpha);
-                            //paintMove.position.lerpVectors(sensorAH.position, lookA2.position, alpha);
-                            paintMove.quaternion.slerpQuaternions(paintMove.quaternion, lookA2.quaternion, alpha);
+                            goal = sensorAH;
+                            if (Math.round(paintMove.position.x) >= sensorAH.position.x && Math.round(paintMove.position.z) >= sensorB.position.z) {
+
+                                goal = lookA2;
+                            }
+
+                            paintMove.position.lerpVectors(paintMove.clone().position, goal.position, alpha);
+                            paintMove.quaternion.slerpQuaternions(paintMove.clone().quaternion, goal.quaternion, alpha);
 
                         }
                         if (paintNo === 'B1') {
-                            paintMove.position.lerpVectors(paintMove.position, lookB1.position, alpha);
-                            //paintMove.position.lerpVectors(paintMove.position, sensorB.position, alpha);
-                            //paintMove.position.lerpVectors(sensorB.position, lookB1.position, alpha);
-                            paintMove.quaternion.slerpQuaternions(paintMove.quaternion, lookB1.quaternion, alpha);
+                            goal = sensorB;
+                            if (Math.round(paintMove.position.x) >= sensorB.position.x && Math.round(paintMove.position.z) <= sensorB.position.z) {
+
+                                goal = lookB1;
+                            }
+
+                            paintMove.position.lerpVectors(paintMove.clone().position, goal.position, alpha);
+                            paintMove.quaternion.slerpQuaternions(paintMove.clone().quaternion, goal.quaternion, alpha);
                         }
                         if (paintNo === 'B2') {
-                            paintMove.position.lerpVectors(paintMove.position, lookB2.position, alpha);
-                            //paintMove.position.lerpVectors(paintMove.position, sensorB.position, alpha);
-                            //paintMove.position.lerpVectors(sensorB.position, lookB2.position, alpha);
-                            paintMove.quaternion.slerpQuaternions(paintMove.quaternion, lookB2.quaternion, alpha);
+                            goal = sensorB;
+                            if (Math.round(paintMove.position.x) >= sensorB.position.x && Math.round(paintMove.position.z) <= sensorB.position.z) {
+
+                                goal = lookB2;
+                            }
+
+                            paintMove.position.lerpVectors(paintMove.clone().position, goal.position, alpha);
+                            paintMove.quaternion.slerpQuaternions(paintMove.clone().quaternion, goal.quaternion, alpha);
                         }
                         if (paintNo === 'B3') {
-                            paintMove.position.lerpVectors(paintMove.position, lookB3.position, alpha);
-                            //paintMove.position.lerpVectors(paintMove.position, sensorB.position, alpha);
-                            //paintMove.position.lerpVectors(sensorB.position, lookB3.position, alpha);
-                            paintMove.quaternion.slerpQuaternions(paintMove.quaternion, lookB3.quaternion, alpha);
+                            goal = sensorB;
+                            if (Math.round(paintMove.position.x) <= sensorB.position.x && Math.round(paintMove.position.z) <= sensorB.position.z) {
+
+                                goal = lookB3;
+                            }
+
+                            paintMove.position.lerpVectors(paintMove.clone().position, goal.position, alpha);
+                            paintMove.quaternion.slerpQuaternions(paintMove.clone().quaternion, goal.quaternion, alpha);
                         }
                         if (paintNo === 'B4') {
-                            paintMove.position.lerpVectors(paintMove.position, lookB4.position, alpha);
-                            //paintMove.position.lerpVectors(paintMove.position, sensorB.position, alpha);
-                            //paintMove.position.lerpVectors(sensorB.position, lookB4.position, alpha);
-                            paintMove.quaternion.slerpQuaternions(paintMove.quaternion, lookB4.quaternion, alpha);
+                            goal = sensorB;
+                            if (Math.round(paintMove.position.x) <= sensorB.position.x && Math.round(paintMove.position.z) <= sensorB.position.z) {
+
+                                goal = lookB4;
+                            }
+
+                            paintMove.position.lerpVectors(paintMove.clone().position, goal.position, alpha);
+                            paintMove.quaternion.slerpQuaternions(paintMove.clone().quaternion, goal.quaternion, alpha);
                         }
                         if (paintNo === 'C1') {
-                            paintMove.position.lerpVectors(paintMove.position, lookC1.position, alpha);
-                            //paintMove.position.lerpVectors(paintMove.position, sensorC.position, alpha);
-                            //paintMove.position.lerpVectors(sensorC.position, lookC1.position, alpha);
-                            paintMove.quaternion.slerpQuaternions(paintMove.quaternion, lookC1.quaternion, alpha);
+                            goal = sensorR;
+
+                            if (Math.round(paintMove.position.x) <= sensorR.position.x) {
+                                goal = sensorC;
+                                if (Math.round(paintMove.position.x) >= sensorC.position.x) {
+                                    goal = lookC1;
+                                }
+
+                            }
+                            paintMove.position.lerpVectors(paintMove.clone().position, goal.position, alpha);
+                            paintMove.quaternion.slerpQuaternions(paintMove.clone().quaternion, goal.quaternion, alpha);
                         }
                         if (paintNo === 'C2') {
-                            paintMove.position.lerpVectors(paintMove.position, lookC2.position, alpha);
-                            //paintMove.position.lerpVectors(paintMove.position, sensorC.position, alpha);
-                            //paintMove.position.lerpVectors(sensorC.position, lookC2.position, alpha);
-                            paintMove.quaternion.slerpQuaternions(paintMove.quaternion, lookC2.quaternion, alpha);
+                            goal = sensorR;
+
+                            if (Math.round(paintMove.position.x) <= sensorR.position.x) {
+                                goal = sensorC;
+                                if (Math.round(paintMove.position.x) >= sensorC.position.x) {
+                                    goal = lookC2;
+                                }
+
+                            }
+                            paintMove.position.lerpVectors(paintMove.clone().position, goal.position, alpha);
+                            paintMove.quaternion.slerpQuaternions(paintMove.clone().quaternion, goal.quaternion, alpha);
                         }
                         if (paintNo === 'C3') {
-                            paintMove.position.lerpVectors(paintMove.position, lookC3.position, alpha);
-                            //paintMove.position.lerpVectors(paintMove.position, sensorC.position, alpha);
-                            //paintMove.position.lerpVectors(sensorC.position, lookC3.position, alpha);
-                            paintMove.quaternion.slerpQuaternions(paintMove.quaternion, lookC3.quaternion, alpha);
+                            goal = sensorR;
+
+                            if (Math.round(paintMove.position.x) <= sensorR.position.x) {
+                                goal = sensorC;
+                                if (Math.round(paintMove.position.x) >= sensorC.position.x) {
+                                    goal = lookC3;
+                                }
+
+                            }
+                            paintMove.position.lerpVectors(paintMove.clone().position, goal.position, alpha);
+                            paintMove.quaternion.slerpQuaternions(paintMove.clone().quaternion, goal.quaternion, alpha);
                         }
 
                         if (paintNo === 'D1') {
-                            paintMove.position.lerpVectors(paintMove.position, lookD1.position, alpha);
-                            //paintMove.position.lerpVectors(paintMove.position, sensorD.position, alpha);
-                            //paintMove.position.lerpVectors(sensorD.position, lookD1.position, alpha);
-                            paintMove.quaternion.slerpQuaternions(paintMove.quaternion, lookD1.quaternion, alpha);
+                            goal = sensorR;
+
+                            if (Math.round(paintMove.position.z) <= sensorR.position.z) {
+                                goal = sensorD;
+                                if (Math.round(paintMove.position.x) <= sensorD.position.x && Math.round(paintMove.position.z) <= sensorD.position.z) {
+                                    goal = lookD1;
+                                }
+
+                            }
+                            paintMove.position.lerpVectors(paintMove.clone().position, goal.position, alpha);
+                            paintMove.quaternion.slerpQuaternions(paintMove.clone().quaternion, goal.quaternion, alpha);
                         }
                         if (paintNo === 'D2') {
-                            paintMove.position.lerpVectors(paintMove.position, lookD2.position, alpha);
-                            //paintMove.position.lerpVectors(paintMove.position, sensorD.position, alpha);
-                            //paintMove.position.lerpVectors(sensorD.position, lookD2.position, alpha);
-                            paintMove.quaternion.slerpQuaternions(paintMove.quaternion, lookD2.quaternion, alpha);
+                            goal = sensorR;
+
+                            if (Math.round(paintMove.position.z) <= sensorR.position.z) {
+                                goal = sensorD;
+                                if (Math.round(paintMove.position.x) <= sensorD.position.x && Math.round(paintMove.position.z) <= sensorD.position.z) {
+                                    goal = lookD2;
+                                }
+
+                            }
+                            paintMove.position.lerpVectors(paintMove.clone().position, goal.position, alpha);
+                            paintMove.quaternion.slerpQuaternions(paintMove.clone().quaternion, goal.quaternion, alpha);
                         }
                         if (paintNo === 'D3') {
-                            paintMove.position.lerpVectors(paintMove.position, lookD3.position, alpha);
-                            //paintMove.position.lerpVectors(paintMove.position, sensorD.position, alpha);
-                            //paintMove.position.lerpVectors(sensorD.position, lookD3.position, alpha);
-                            paintMove.quaternion.slerpQuaternions(paintMove.quaternion, lookD3.quaternion, alpha);
+                            goal = sensorR;
+
+                            if (Math.round(paintMove.position.z) <= sensorR.position.z) {
+                                goal = sensorD;
+                                if (Math.round(paintMove.position.x) <= sensorD.position.x && Math.round(paintMove.position.z) <= sensorD.position.z) {
+                                    goal = lookD3;
+                                }
+
+                            }
+                            paintMove.position.lerpVectors(paintMove.clone().position, goal.position, alpha);
+                            paintMove.quaternion.slerpQuaternions(paintMove.clone().quaternion, goal.quaternion, alpha);
                         }
 
                         if (paintNo === 'E1') {
-                            paintMove.position.lerpVectors(paintMove.position, lookE1.position, alpha);
-                            //paintMove.position.lerpVectors(paintMove.position, sensorF.position, alpha);
-                            //paintMove.position.lerpVectors(sensorF.position, lookE1.position, alpha);
-                            paintMove.quaternion.slerpQuaternions(paintMove.quaternion, lookE1.quaternion, alpha);
+                            goal = sensorR;
+
+                            if (Math.round(paintMove.position.z) <= sensorR.position.z) {
+                                goal = sensorF;
+                                if (Math.round(paintMove.position.x) <= sensorF.position.x && Math.round(paintMove.position.z) <= sensorF.position.z) {
+                                    goal = lookE1;
+                                }
+
+                            }
+                            paintMove.position.lerpVectors(paintMove.clone().position, goal.position, alpha);
+                            paintMove.quaternion.slerpQuaternions(paintMove.clone().quaternion, goal.quaternion, alpha);
                         }
                         if (paintNo === 'E2') {
-                            paintMove.position.lerpVectors(paintMove.position, lookE2.position, alpha);
-                            //paintMove.position.lerpVectors(paintMove.position, sensorF.position, alpha);
-                            //paintMove.position.lerpVectors(sensorF.position, lookE2.position, alpha);
-                            paintMove.quaternion.slerpQuaternions(paintMove.quaternion, lookE2.quaternion, alpha);
+                            goal = sensorR;
+
+                            if (Math.round(paintMove.position.z) <= sensorR.position.z) {
+                                goal = sensorF;
+                                if (Math.round(paintMove.position.x) <= sensorF.position.x && Math.round(paintMove.position.z) <= sensorF.position.z) {
+                                    goal = lookE2;
+                                }
+
+                            }
+                            paintMove.position.lerpVectors(paintMove.clone().position, goal.position, alpha);
+                            paintMove.quaternion.slerpQuaternions(paintMove.clone().quaternion, goal.quaternion, alpha);
                         }
                         if (paintNo === 'E3') {
-                            paintMove.position.lerpVectors(paintMove.position, lookE3.position, alpha);
-                            //paintMove.position.lerpVectors(paintMove.position, sensorF.position, alpha);
-                            //paintMove.position.lerpVectors(sensorF.position, lookE3.position, alpha);
-                            paintMove.quaternion.slerpQuaternions(paintMove.quaternion, lookE3.quaternion, alpha);
+                            goal = sensorR;
+
+                            if (Math.round(paintMove.position.z) <= sensorR.position.z) {
+                                goal = sensorF;
+                                if (Math.round(paintMove.position.x) <= sensorF.position.x && Math.round(paintMove.position.z) <= sensorF.position.z) {
+                                    goal = lookE3;
+                                }
+
+                            }
+                            paintMove.position.lerpVectors(paintMove.clone().position, goal.position, alpha);
+                            paintMove.quaternion.slerpQuaternions(paintMove.clone().quaternion, goal.quaternion, alpha);
                         }
                         if (paintNo === 'G1') {
-                            paintMove.position.lerpVectors(paintMove.position, lookG1.position, alpha);
-                            //paintMove.position.lerpVectors(paintMove.position, sensorF.position, alpha);
-                            //paintMove.position.lerpVectors(sensorF.position, lookG1.position, alpha);
-                            paintMove.quaternion.slerpQuaternions(paintMove.quaternion, lookG1.quaternion, alpha);
+                            goal = sensorR;
+
+                            if (Math.round(paintMove.position.z) <= sensorR.position.z) {
+                                goal = sensorF;
+
+                            }
+                            if (Math.round(paintMove.position.x) <= sensorF.position.x) {
+                                goal = lookG1;
+                            }
+                            paintMove.position.lerpVectors(paintMove.clone().position, goal.position, alpha);
+                            paintMove.quaternion.slerpQuaternions(paintMove.clone().quaternion, goal.quaternion, alpha);
                         }
                         if (paintNo === 'G2') {
-                            paintMove.position.lerpVectors(paintMove.position, lookG2.position, alpha);
-                            //paintMove.position.lerpVectors(paintMove.position, sensorF.position, alpha);
-                            //paintMove.position.lerpVectors(sensorF.position, lookG2.position, alpha);
-                            paintMove.quaternion.slerpQuaternions(paintMove.quaternion, lookG2.quaternion, alpha);
+                            goal = sensorR;
+
+                            if (Math.round(paintMove.position.z) <= sensorR.position.z) {
+                                goal = sensorF;
+
+                            }
+                            if (Math.round(paintMove.position.x) <= sensorF.position.x) {
+                                goal = lookG2;
+                            }
+                            paintMove.position.lerpVectors(paintMove.clone().position, goal.position, alpha);
+                            paintMove.quaternion.slerpQuaternions(paintMove.clone().quaternion, goal.quaternion, alpha);
                         }
                         if (paintNo === 'G3') {
-                            paintMove.position.lerpVectors(paintMove.position, lookG3.position, alpha);
-                            //paintMove.position.lerpVectors(paintMove.position, sensorF.position, alpha);
-                            //paintMove.position.lerpVectors(sensorF.position, lookG3.position, alpha);
-                            paintMove.quaternion.slerpQuaternions(paintMove.quaternion, lookG3.quaternion, alpha);
+                            goal = sensorR;
+
+                            if (Math.round(paintMove.position.z) <= sensorR.position.z) {
+                                goal = sensorF;
+
+                            }
+                            if (Math.round(paintMove.position.x) <= sensorF.position.x) {
+                                goal = lookG3;
+                            }
+                            paintMove.position.lerpVectors(paintMove.clone().position, goal.position, alpha);
+                            paintMove.quaternion.slerpQuaternions(paintMove.clone().quaternion, goal.quaternion, alpha);
                         }
 
                         if (paintNo === 'H1') {
-                            paintMove.position.lerpVectors(paintMove.position, lookH1.position, alpha);
-                            //paintMove.position.lerpVectors(paintMove.position, sensorAH.position, alpha);
-                            //paintMove.position.lerpVectors(sensorAH.position, lookH1.position, alpha);
-                            paintMove.quaternion.slerpQuaternions(paintMove.quaternion, lookH1.quaternion, alpha);
+                            goal = sensorAH;
+                            if (Math.round(paintMove.position.x) <= sensorAH.position.x) {
+
+                                goal = lookH1;
+                            }
+
+                            paintMove.position.lerpVectors(paintMove.clone().position, goal.position, alpha);
+                            paintMove.quaternion.slerpQuaternions(paintMove.clone().quaternion, goal.quaternion, alpha);
                         }
                         if (paintNo === 'H2') {
-                            paintMove.position.lerpVectors(paintMove.position, lookH2.position, alpha);
-                            //paintMove.position.lerpVectors(paintMove.position, sensorAH.position, alpha);
-                            //paintMove.position.lerpVectors(sensorAH.position, lookH2.position, alpha);
-                            paintMove.quaternion.slerpQuaternions(paintMove.quaternion, lookH2.quaternion, alpha);
+                            goal = sensorAH;
+                            if (Math.round(paintMove.position.x) <= sensorAH.position.x) {
+
+                                goal = lookH2;
+                            }
+
+                            paintMove.position.lerpVectors(paintMove.clone().position, goal.position, alpha);
+                            paintMove.quaternion.slerpQuaternions(paintMove.clone().quaternion, goal.quaternion, alpha);
                         }
                         if (paintNo === 'H3') {
-                            paintMove.position.lerpVectors(paintMove.position, lookH3.position, alpha);
-                            //paintMove.position.lerpVectors(paintMove.position, sensorAH.position, alpha);
-                            //paintMove.position.lerpVectors(sensorAH.position, lookH3.position, alpha);
-                            paintMove.quaternion.slerpQuaternions(paintMove.quaternion, lookH3.quaternion, alpha);
+                            goal = sensorAH;
+                            if (Math.round(paintMove.position.x) <= sensorAH.position.x) {
+
+                                goal = lookH3;
+                            }
+
+                            paintMove.position.lerpVectors(paintMove.clone().position, goal.position, alpha);
+                            paintMove.quaternion.slerpQuaternions(paintMove.clone().quaternion, goal.quaternion, alpha);
                         }
                         if (paintNo === 'H4') {
-                            paintMove.position.lerpVectors(paintMove.position, lookH4.position, alpha);
-                            //paintMove.position.lerpVectors(paintMove.position, sensorAH.position, alpha);
-                            //paintMove.position.lerpVectors(sensorAH.position, lookH4.position, alpha);
-                            paintMove.quaternion.slerpQuaternions(paintMove.quaternion, lookH4.quaternion, alpha);
+                            goal = sensorAH;
+                            if (Math.round(paintMove.position.x) <= sensorAH.position.x) {
+
+                                goal = lookH4;
+                            }
+
+                            paintMove.position.lerpVectors(paintMove.clone().position, goal.position, alpha);
+                            paintMove.quaternion.slerpQuaternions(paintMove.clone().quaternion, goal.quaternion, alpha);
                         }
                         if (paintNo === 'H5') {
-                            paintMove.position.lerpVectors(paintMove.position, lookH5.position, alpha);
-                            //paintMove.position.lerpVectors(paintMove.position, sensorAH.position, alpha);
-                            //paintMove.position.lerpVectors(sensorAH.position, lookH5.position, alpha);
-                            paintMove.quaternion.slerpQuaternions(paintMove.quaternion, lookH5.quaternion, alpha);
+                            goal = sensorAH;
+                            if (Math.round(paintMove.position.x) <= sensorAH.position.x) {
+
+                                goal = lookH5;
+                            }
+
+                            paintMove.position.lerpVectors(paintMove.clone().position, goal.position, alpha);
+                            paintMove.quaternion.slerpQuaternions(paintMove.clone().quaternion, goal.quaternion, alpha);
                         }
                     }
 
@@ -972,7 +1120,6 @@
                     spotLightHelper.update();
 
                 }
-
 
             </script>
 </body>
