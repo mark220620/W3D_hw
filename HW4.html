@@ -104,6 +104,7 @@
             }
 
             ///////////////
+            /*
             var recsT = [];
             for (let i = 0; i < tables.length; i++) {
                 var recT = {};
@@ -112,29 +113,32 @@
                 recT.z = tables[i].position.z.toFixed(2);
                 recsT.push(recT);
             }
-
+            */
             // puckRecs --> JSON.stringify --> localStorage
             var recLog = JSON.stringify(recs);
             localStorage.setItem('puckLog', recLog);
 
             ///////////
+            /*
             var recTLog = JSON.stringify(recsT);
             localStorage.setItem('puckTLog', recTLog);
+            */
         });
 
         $('#clear').click(function () {
 
-            pucks.forEach(function (puck) {
-                puck.removeFromParent();
+            pucks.forEach(function (chairA) {
+                chairA.removeFromParent();
             })
 
             pucks = [];
-
+            /*
             tables.forEach(function (tablePuck) {
                 tablePuck.removeFromParent();
             })
 
             tables = [];
+            */
         });
 
         $('#restore').click(function () {
@@ -142,12 +146,12 @@
             // localStorage --> JSON.parse --> puckRecs
             var parseLog = JSON.parse(localStorage.getItem('puckLog'));
             for (let i = 0; i < parseLog.length; i++) {
-                var newPuck = puck.clone();
+                var newPuck = chairA.clone();
                 newPuck.position.set(parseLog[i].x, 0, parseLog[i].z);
                 scene.add(newPuck);
                 pucks.push(newPuck);
             }
-
+            /*
             var parseTLog = JSON.parse(localStorage.getItem('puckTLog'));
             for (let i = 0; i < parseTLog.length; i++) {
                 var newPuckT = tablePuck.clone();
@@ -155,6 +159,7 @@
                 scene.add(newPuckT);
                 tables.push(newPuckT);
             }
+            */
         });
 
         function init() {
@@ -431,6 +436,7 @@
                     var intersects = raycaster.intersectObject(floorGroup);
                     if (intersects.length > 0) {
                         var newPuck = chairA.clone();
+                        
                         newPuck.position.copy(intersects[0].point);
                         //newPuck.name = 'puck'+puckId++;
                         scene.add(newPuck);
