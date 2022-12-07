@@ -257,7 +257,7 @@
                     
                     var c = unitize(object, targetSize);
                     c.name = 'OBJ';
-                    c.position.y = 7.4;
+                    //c.position.y = 7.4;
                     
                     chairA = new THREE.Object3D();
                     chairA.add(c);    
@@ -436,7 +436,7 @@
                     var intersects = raycaster.intersectObject(floorGroup);
                     if (intersects.length > 0) {
                         var newPuck = chairA.clone();
-                        
+                        //console.log(newPuck);
                         newPuck.position.copy(intersects[0].point);
                         //newPuck.name = 'puck'+puckId++;
                         scene.add(newPuck);
@@ -483,7 +483,6 @@
                     thePuck = intersects[0].object;
                 }
 
-
             }
         }
 
@@ -509,15 +508,16 @@
             if (thePuck === null) return;
 
             var viewportPos = $('#container').get(0).getBoundingClientRect();
-            mouse.x = ((event.clientX - viewportPos.left) / $('#container').innerWidth()) * 2 - 1;
-            mouse.y = -((event.clientY - viewportPos.top) / $('#container').innerHeight()) * 2 + 1;
+            mouse.x = ((event.clientX - viewportPos.left) / $('#container').innerWidth())  - 1;
+            mouse.y = -((event.clientY - viewportPos.top) / $('#container').innerHeight())  + 1;
 
             raycaster.setFromCamera(mouse, camera);
             var intersects = raycaster.intersectObject(floorGroup);
             if (intersects.length > 0) {
-                controls.enabled = false; // to disable camera movement
 
+                controls.enabled = false; // to disable camera movement
                 thePuck.position.copy(intersects[0].point);
+                console.log(intersects[0].point);
             }
 
         }
