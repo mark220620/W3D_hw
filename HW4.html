@@ -19,22 +19,27 @@
         <div style='background-color:pink'>
             Furniture Selector:
             <br>
-            <input type=radio class='furniture' id='chair' name='c' value='chair' checked>chair
-            <input type=radio class='furniture' id='table' name='c' value='table'>table
+            <input type=radio class='furniture' id='chair' name='c' value='chair' checked>chair<img
+                style="height: 5vw; width: 5vw;" src="https://i.imgur.com/Ul8IrAw.jpg">
+            <input type=radio class='furniture' id='table' name='c' value='table'>table <img
+                style="height: 5vw; width: 5vw;" src="https://i.imgur.com/5eCu8YQ.jpg">
+
+        </div>
+        <br>
+        <div style="background-color:yellow">
+            <input type=radio class='function' id='placing' name='f' value='place' checked> Place <br>
+            <input type=radio class='function' name='f' value='move'> Move<br>
+            <input type=radio class='function' name='f' value='delete'> Delete<br>
 
         </div>
         <br>
         <button id='save' style="width:50%">Save</button>
         <button id='clear' style="width:50%">Clear</button>
         <button id='restore' style="width:50%">Restore</button>
-    </div>
-
-    <div style="width:30vw;float:left; margin:10px;background-color:yellow">
-        <input type=radio class='function' id='placing' name='f' value='place' checked> Place <br>
-        <input type=radio class='function' name='f' value='move'> Move<br>
-        <input type=radio class='function' name='f' value='delete'> Delete<br>
 
     </div>
+
+
 
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="https://threejs.org/build/three.min.js"></script>
@@ -133,14 +138,14 @@
                     var newPuck = puck.clone();
                     newPuck.position.set(parseLog[i].x, 0, parseLog[i].z);
                 }
-                    else if  (parseLog[i].name === 'table') {
-                        var newPuck = tablePuck.clone();
-                        newPuck.position.set(parseLog[i].x, 0, parseLog[i].z);
-                    }
-                    newPuck.name = parseLog[i].name;
-                    newPuck.position.set(parseLog[i].x,0,parseLog.z);
-                    scene.add(newPuck);
-                    pucks.push(newPuck);
+                else if (parseLog[i].name === 'table') {
+                    var newPuck = tablePuck.clone();
+                    newPuck.position.set(parseLog[i].x, 0, parseLog[i].z);
+                }
+                newPuck.name = parseLog[i].name;
+                newPuck.position.set(parseLog[i].x, 0, parseLog.z);
+                scene.add(newPuck);
+                pucks.push(newPuck);
             }
 
 
@@ -161,7 +166,7 @@
             scene = new THREE.Scene();
 
             camera = new THREE.PerspectiveCamera(45, ww / hh, 1, 10000);
-            camera.position.set(0, 80, 200)
+            camera.position.set(0, 100, 300)
             camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 

@@ -9,3 +9,5 @@
  ●✅ [HTML Input & Vector3 API, bottom](https://mark220620.github.io/W3D_hw/HW2.html)
 
  ●✅ [Gallery Floor Plan, bottom](https://mark220620.github.io/W3D_hw/HW3.html)
+
+ ●✅ [Patio Design, bottom](https://mark220620.github.io/W3D_hw/HW4.html)
