@@ -508,8 +508,8 @@
             if (thePuck === null) return;
 
             var viewportPos = $('#container').get(0).getBoundingClientRect();
-            mouse.x = ((event.clientX - viewportPos.left) / $('#container').innerWidth()) * 2 - 1;
-            mouse.y = -((event.clientY - viewportPos.top) / $('#container').innerHeight()) * 2 + 1;
+            mouse.x = ((event.clientX - viewportPos.left) / $('#container').innerWidth()) /20 - 1;
+            mouse.y = -((event.clientY - viewportPos.top) / $('#container').innerHeight()) / 20 + 1;
 
             raycaster.setFromCamera(mouse, camera);
             var intersects = raycaster.intersectObject(floorGroup);
