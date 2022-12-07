@@ -36,13 +36,16 @@
 
     </div>
 
-    <<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <!--<script src="https://threejs.org/build/three.min.js"></script>
     <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>-->
-    
-    <script type = "module">
-        import * as THREE from 'three'
-        import * as BufferGeometryUtils from './modules/BufferGeometryUtils.js';
+
+    <script type="module">
+        import * as THREE from 'https://cdn.skypack.dev/three@0.136';
+        import { OrbitControls } from 'https://cdn.skypack.dev/three@0.136/examples/jsm/controls/OrbitControls.js';
+        import { MTLLoader } from 'https://cdn.skypack.dev/three@0.136/examples/jsm/loaders/MTLLoader.js';
+        import { OBJLoader } from 'https://cdn.skypack.dev/three@0.136/examples/jsm/loaders/OBJLoader.js';
+
         $('.function').click(function () {
             if ($(this).val() === 'place') {
                 placing = true;
@@ -83,7 +86,7 @@
         var chair = true, table = true;
 
         var placing = true, moving = true, drop = true;
-
+        var chair;
         let controls;
         init();
         animate();
@@ -172,12 +175,12 @@
             camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 
-            puck = buildChair();
-            tablePuck = buildTable();
+            //puck = buildChair();
+            //tablePuck = buildTable();
 
 
 
-            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls = new OrbitControls(camera, renderer.domElement);
 
             var gridXZ = new THREE.GridHelper(200, 20, 'red', 'white');
             //scene.add(gridXZ);
@@ -217,8 +220,67 @@
             $('#container').on("pointerup", onMouseUp);
             thePuck = null;
             //window.addEventListener('mousemove', onDocumentMouseMove, false);
-        }
 
+            ///////////////////////////////////////////
+            readModel('Taburetka');
+            //car = buildVehicle();
+
+            chair = new THREE.Object3D();
+            //car.position.y = 15;
+            scene.add(chair)
+            //////////////////////////////////////////
+        }
+        /////////////////////////////////////////////////////////////////////////////////
+        function readModel(modelName, targetSize = 40) {
+            var onProgress = function (xhr) {
+                if (xhr.lengthComputable) {
+                    var percentComplete = xhr.loaded / xhr.total * 100;
+                    console.log(Math.round(percentComplete, 2) + '%downloaded');
+                }
+            };
+            var onError = function (xhr) { };
+            var mtlLoader = new MTLLoader();
+            mtlLoader.setPath('models/');
+            mtlLoader.load(modelName + '.mtl', function (materials) {
+                materials.preload();
+    
+                var objLoader = new OBJLoader();
+                objLoader.setMaterials(materials);
+                objLoader.setPath('models/');
+                objLoader.load(modelName + '.obj', function (object) {
+                    
+                    var c = unitize(object, targetSize);
+                    c.name = 'OBJ';
+                    c.position.y = 7.4;
+                    
+                    chair = new THREE.Object3D();
+                    chair.add(c);    
+                           
+                    scene.add(chair);
+
+                }, onProgress, onError);
+
+            });
+        }
+        function unitize(object, targetSize) {
+            var box3 = new THREE.Box3();
+            box3.setFromObject(object);
+            var size = new THREE.Vector3();
+            size.subVectors(box3.max, box3.min);
+            var center = new THREE.Vector3();
+            center.addVectors(box3.max, box3.min).multiplyScalar(0.5);
+
+            var objSize = Math.max(size.x, size.y, size.z);
+            var scaleSet = targetSize / objSize;
+
+            var theObject = new THREE.Object3D();
+            theObject.add(object);
+            object.scale.set(scaleSet, scaleSet, scaleSet);
+            object.position.set(-center.x * scaleSet, -center.y * scaleSet, -center.z * scaleSet);
+
+            return theObject;
+        }
+        //////////////////////////////////////////////////////////////////////////////////
         function buildChair() {
             let loader = new THREE.TextureLoader();
             loader.crossOrigin = '';
@@ -284,16 +346,19 @@
             chairBack4.rotation.z = Math.PI / 2;
             chairBottom.position.set(0, 20, 15);
 
-            var chairQQ = new THREE.Group();
+            var geometry = new THREE.BoxGeometry(2, 3, 1);
+            var material = new THREE.MeshNormalMaterial({
+                transparent: true,
+                opacity: 0.5
+            });
+
+            var chairQQ = new THREE.Mesh(geometry,geometry);
             chairQQ.add(chairHand1, chairHand2, chairBottom, chairBack, chairBack1, chairBack2, chairBack3, chairBack4, chairLeg1, chairLeg2, chairLeg3, chairLeg4);
 
-            let geometryArray = [];
-            let materialArray = [];
-            geometryArray.push(chairBack1,chairBack2);
-            const mergedGeometries = BufferGeometryUtils.mergeBufferGeometries(geometryArray,true);
-            const singleMergeMesh = new THREE.Mesh(mergedGeometries,materialArray);
-            
-            return singleMergeMesh;
+            console.log(chairQQ);
+
+
+            return chairQQ;
         }
 
         function buildTable() {
@@ -384,10 +449,12 @@
                 }
 
             } else if (drop === true) { // delete
+                
                 var intersects = raycaster.intersectObjects(pucks);
+                
                 if (intersects.length > 0) {
                     thePuck = intersects[0].object;
-
+                    
                     //scene.remove(thePuck);
                     thePuck.removeFromParent();
 
