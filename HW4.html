@@ -86,7 +86,7 @@
         var chair = true, table = true;
 
         var placing = true, moving = true, drop = true;
-        var chair;
+        var chairA;
         let controls;
         init();
         animate();
@@ -225,9 +225,10 @@
             readModel('Taburetka');
             //car = buildVehicle();
 
-            chair = new THREE.Object3D();
+            chairA = new THREE.Object3D();
             //car.position.y = 15;
-            scene.add(chair)
+            
+            
             //////////////////////////////////////////
         }
         /////////////////////////////////////////////////////////////////////////////////
@@ -253,10 +254,10 @@
                     c.name = 'OBJ';
                     c.position.y = 7.4;
                     
-                    chair = new THREE.Object3D();
-                    chair.add(c);    
-                           
-                    scene.add(chair);
+                    chairA = new THREE.Object3D();
+                    chairA.add(c);    
+                    puck = chairA;
+                    //scene.add(chair);
 
                 }, onProgress, onError);
 
@@ -429,7 +430,7 @@
 
                     var intersects = raycaster.intersectObject(floorGroup);
                     if (intersects.length > 0) {
-                        var newPuck = puck.clone();
+                        var newPuck = chairA.clone();
                         newPuck.position.copy(intersects[0].point);
                         //newPuck.name = 'puck'+puckId++;
                         scene.add(newPuck);
@@ -437,7 +438,7 @@
                     }
                 }
                 else if (table === true) {
-
+                    /*
                     var intersectsT = raycaster.intersectObject(floorGroup);
                     if (intersectsT.length > 0) {
                         var newPuckT = tablePuck.clone();
@@ -446,6 +447,7 @@
                         scene.add(newPuckT);
                         tables.push(newPuckT);
                     }
+                    */
                 }
 
             } else if (drop === true) { // delete
