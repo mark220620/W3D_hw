@@ -26,6 +26,8 @@
 
         </div>
         <br>
+        <input type=checkbox id='toggleLight'> lighting <br>
+        <br>
         <div style="background-color:yellow">
             <input type=radio class='function' id='placing' name='f' value='place' checked> Place <br>
             <input type=radio class='function' name='f' value='move'> Move<br>
@@ -89,8 +91,26 @@
 
         var placing = true, moving = true, drop = true;
         let controls;
+        var lightCheck = false;
         init();
         animate();
+
+        $('#toggleLight').click(function () {
+            lightCheck = !lightCheck;
+
+            var directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(0, 100, 0);
+            if (lightCheck === true) {
+                console.log(1);
+                scene.add(directionalLight)
+            }
+            else {
+                console.log(2);
+                scene.remove(directionalLight)
+            }
+        })
+
+
 
         $('#save').click(function () {
 
@@ -183,8 +203,8 @@
             // build an invisible plane, overlapping the grid
             var loader = new THREE.TextureLoader();
             floorGroup = new THREE.Group();
-            var grassMap = loader.load('https://i.imgur.com/ADGE9Ix.jpg');
-            var grassAlpha = loader.load('https://i.imgur.com/FzkX7ON.jpg');
+            var grassMap = loader.load('https://i.imgur.com/zUP05iq.jpg');
+            var grassAlpha = loader.load('https://i.imgur.com/1aUET2b.png');
             var grassFloor = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshBasicMaterial({
                 map: grassMap,
                 transparent: true,
@@ -197,14 +217,21 @@
                     transparent: true,
                     alphaMap: grassAlpha
                 }));
-            var stoneMap = loader.load('https://i.imgur.com/T1ZbCDb.jpg');
-            var stoneAlpha = loader.load('https://i.imgur.com/fQyJIhS.jpg');
+            var stoneMap = loader.load('https://i.imgur.com/Mbs1rTd.jpg');
+            var stoneAlpha = loader.load('https://i.imgur.com/XNeqE7M.png');
             var stoneFloor = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshBasicMaterial({
                 map: stoneMap,
                 transparent: true,
                 alphaMap: stoneAlpha
             }));
-            floorGroup.add(grassFloor, stoneFloor);
+            var cubeMap = loader.load('https://i.imgur.com/CLSuK8T.jpg');
+            var cubeAlpha = loader.load('https://i.imgur.com/UYAnjIb.png');
+            var cubeFloor = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshBasicMaterial({
+                map: cubeMap,
+                transparent: true,
+                alphaMap: cubeAlpha
+            }));
+            floorGroup.add(grassFloor, stoneFloor,cubeFloor);
             floorGroup.rotation.x = -Math.PI / 2;
 
             scene.add(floorGroup);
@@ -559,6 +586,7 @@
             const mat = new THREE.MeshBasicMaterial({
                 map: texture
             });
+
             const mesh = new THREE.Mesh(geo, mat);
 
 
