@@ -261,7 +261,7 @@
                     
                     chairA = new THREE.Object3D();
                     chairA.add(c);    
-                    puck = chairA;
+                    //puck = chairA;
                     //scene.add(chair);
 
                 }, onProgress, onError);
@@ -508,8 +508,8 @@
             if (thePuck === null) return;
 
             var viewportPos = $('#container').get(0).getBoundingClientRect();
-            mouse.x = ((event.clientX - viewportPos.left) / $('#container').innerWidth())  - 1;
-            mouse.y = -((event.clientY - viewportPos.top) / $('#container').innerHeight())  + 1;
+            mouse.x = ((event.clientX - viewportPos.left) / $('#container').innerWidth()) * 2 - 1;
+            mouse.y = -((event.clientY - viewportPos.top) / $('#container').innerHeight()) * 2 + 1;
 
             raycaster.setFromCamera(mouse, camera);
             var intersects = raycaster.intersectObject(floorGroup);
@@ -517,7 +517,7 @@
 
                 controls.enabled = false; // to disable camera movement
                 thePuck.position.copy(intersects[0].point);
-                console.log(intersects[0].point);
+                //console.log(intersects[0].point);
             }
 
         }
