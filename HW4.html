@@ -37,14 +37,11 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <!--<script src="https://threejs.org/build/three.min.js"></script>
-    <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>-->
+    <script src="https://threejs.org/build/three.min.js"></script>
+    <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
 
-    <script type="module">
-        import * as THREE from 'https://cdn.skypack.dev/three@0.136';
-        import { OrbitControls } from 'https://cdn.skypack.dev/three@0.136/examples/jsm/controls/OrbitControls.js';
-        import { MTLLoader } from 'https://cdn.skypack.dev/three@0.136/examples/jsm/loaders/MTLLoader.js';
-        import { OBJLoader } from 'https://cdn.skypack.dev/three@0.136/examples/jsm/loaders/OBJLoader.js';
+    <script>
+
 
         $('.function').click(function () {
             if ($(this).val() === 'place') {
@@ -83,10 +80,9 @@
 
         var tables = [], tablePuck, theTable, tableId = 0;
 
-        var chair = true, table = true;
+        var chair = true, table = false;
 
         var placing = true, moving = true, drop = true;
-        var chairA;
         let controls;
         init();
         animate();
@@ -104,41 +100,28 @@
             }
 
             ///////////////
-            /*
-            var recsT = [];
-            for (let i = 0; i < tables.length; i++) {
-                var recT = {};
-                recT.name = tables[i].name;
-                recT.x = tables[i].position.x.toFixed(2);
-                recT.z = tables[i].position.z.toFixed(2);
-                recsT.push(recT);
-            }
-            */
+
+
             // puckRecs --> JSON.stringify --> localStorage
             var recLog = JSON.stringify(recs);
             localStorage.setItem('puckLog', recLog);
 
             ///////////
-            /*
-            var recTLog = JSON.stringify(recsT);
-            localStorage.setItem('puckTLog', recTLog);
-            */
+
+
+
         });
 
         $('#clear').click(function () {
 
-            pucks.forEach(function (chairA) {
-                chairA.removeFromParent();
+            pucks.forEach(function (puck) {
+                puck.removeFromParent();
             })
 
             pucks = [];
-            /*
-            tables.forEach(function (tablePuck) {
-                tablePuck.removeFromParent();
-            })
 
-            tables = [];
-            */
+
+
         });
 
         $('#restore').click(function () {
@@ -146,20 +129,22 @@
             // localStorage --> JSON.parse --> puckRecs
             var parseLog = JSON.parse(localStorage.getItem('puckLog'));
             for (let i = 0; i < parseLog.length; i++) {
-                var newPuck = chairA.clone();
-                newPuck.position.set(parseLog[i].x, 0, parseLog[i].z);
-                scene.add(newPuck);
-                pucks.push(newPuck);
+                if (parseLog[i].name === 'chair') {
+                    var newPuck = puck.clone();
+                    newPuck.position.set(parseLog[i].x, 0, parseLog[i].z);
+                }
+                    else if  (parseLog[i].name === 'table') {
+                        var newPuck = tablePuck.clone();
+                        newPuck.position.set(parseLog[i].x, 0, parseLog[i].z);
+                    }
+                    newPuck.name = parseLog[i].name;
+                    newPuck.position.set(parseLog[i].x,0,parseLog.z);
+                    scene.add(newPuck);
+                    pucks.push(newPuck);
             }
-            /*
-            var parseTLog = JSON.parse(localStorage.getItem('puckTLog'));
-            for (let i = 0; i < parseTLog.length; i++) {
-                var newPuckT = tablePuck.clone();
-                newPuckT.position.set(parseTLog[i].x, 0, parseTLog[i].z);
-                scene.add(newPuckT);
-                tables.push(newPuckT);
-            }
-            */
+
+
+
         });
 
         function init() {
@@ -180,12 +165,12 @@
             camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 
-            //puck = buildChair();
-            //tablePuck = buildTable();
+            puck = buildChair();
+            tablePuck = buildTable();
 
 
 
-            controls = new OrbitControls(camera, renderer.domElement);
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
 
             var gridXZ = new THREE.GridHelper(200, 20, 'red', 'white');
             //scene.add(gridXZ);
@@ -226,145 +211,41 @@
             thePuck = null;
             //window.addEventListener('mousemove', onDocumentMouseMove, false);
 
-            ///////////////////////////////////////////
-            readModel('Desk');
-            //car = buildVehicle();
 
-            chairA = new THREE.Object3D();
-            //car.position.y = 15;
-            
-            
-            //////////////////////////////////////////
         }
-        /////////////////////////////////////////////////////////////////////////////////
-        function readModel(modelName, targetSize = 40) {
-            var onProgress = function (xhr) {
-                if (xhr.lengthComputable) {
-                    var percentComplete = xhr.loaded / xhr.total * 100;
-                    console.log(Math.round(percentComplete, 2) + '%downloaded');
-                }
-            };
-            var onError = function (xhr) { };
-            var mtlLoader = new MTLLoader();
-            mtlLoader.setPath('models/');
-            mtlLoader.load(modelName + '.mtl', function (materials) {
-                materials.preload();
-    
-                var objLoader = new OBJLoader();
-                objLoader.setMaterials(materials);
-                objLoader.setPath('models/');
-                objLoader.load(modelName + '.obj', function (object) {
-                    
-                    var c = unitize(object, targetSize);
-                    c.name = 'OBJ';
-                    //c.position.y = 7.4;
-                    
-                    chairA = new THREE.Object3D();
-                    chairA.add(c);    
-                    //puck = chairA;
-                    //scene.add(chair);
 
-                }, onProgress, onError);
-
-            });
-        }
-        function unitize(object, targetSize) {
-            var box3 = new THREE.Box3();
-            box3.setFromObject(object);
-            var size = new THREE.Vector3();
-            size.subVectors(box3.max, box3.min);
-            var center = new THREE.Vector3();
-            center.addVectors(box3.max, box3.min).multiplyScalar(0.5);
-
-            var objSize = Math.max(size.x, size.y, size.z);
-            var scaleSet = targetSize / objSize;
-
-            var theObject = new THREE.Object3D();
-            theObject.add(object);
-            object.scale.set(scaleSet, scaleSet, scaleSet);
-            object.position.set(-center.x * scaleSet, -center.y * scaleSet, -center.z * scaleSet);
-
-            return theObject;
-        }
-        //////////////////////////////////////////////////////////////////////////////////
         function buildChair() {
             let loader = new THREE.TextureLoader();
             loader.crossOrigin = '';
             texture = loader.load('https://i.imgur.com/DrvlmNW.jpg');
 
-            chairLeg = new THREE.Mesh(new THREE.BoxGeometry(10, 48, 5), new THREE.MeshBasicMaterial({
-                map: texture
-            }));
+            const length = 12, width = 8;
 
-            chairHand = new THREE.Mesh(new THREE.BoxGeometry(10, 45, 5), new THREE.MeshBasicMaterial({
-                map: texture
-            }));
+            const shape = new THREE.Shape();
+            shape.moveTo(0, 0);
+            shape.lineTo(0, width);
+            shape.lineTo(length, width);
+            shape.lineTo(length, 0);
+            shape.lineTo(0, 0);
 
-            chairBottom = new THREE.Mesh(new THREE.BoxGeometry(50, 5, 45), new THREE.MeshBasicMaterial({
-                map: texture
-            }));
+            const extrudeSettings = {
+                steps: 3,
+                depth: 15,
+                bevelEnabled: true,
+                bevelThickness: 2,
+                bevelSize: 2,
+                bevelOffset: 0,
+                bevelSegments: 5
+            };
 
-            chairBacks = new THREE.Mesh(new THREE.BoxGeometry(8, 45, 5), new THREE.MeshBasicMaterial({
-                map: texture
-            }));
+            const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+            const material = new THREE.MeshBasicMaterial({ map: texture });
+            const mesh = new THREE.Mesh(geometry, material);
 
-            chairBackss = new THREE.Mesh(new THREE.BoxGeometry(4, 28, 2), new THREE.MeshBasicMaterial({
-                map: texture
-            }));
-
-
-            chairLeg1 = chairLeg.clone();
-            chairLeg1.position.set(20, 24, 40);
-            chairLeg2 = chairLeg.clone();
-            chairLeg2.position.set(-20, 24, 40);
-            chairLeg3 = chairLeg.clone();
-            chairLeg3.position.set(20, 24, -10);
-            chairLeg4 = chairLeg.clone();
-            chairLeg4.position.set(-20, 24, -10);
-
-            chairHand1 = chairHand.clone();
-            chairHand1.rotation.x = Math.PI / 2;
-            chairHand1.position.set(-20, 45.5, 15);
-
-            chairHand2 = chairHand.clone();
-            chairHand2.rotation.x = Math.PI / 2;
-            chairHand2.position.set(20, 45.5, 15);
-
-            chairBack = chairHand.clone();
-            chairBack.rotation.z = Math.PI / 2;
-            chairBack.position.set(0, 53, -10);
-
-            chairBack1 = chairBacks.clone();
-            chairBack1.position.set(10, 44.5, 0);
-            chairBack1.rotation.x = -Math.PI / 9;
-
-            chairBack2 = chairBacks.clone();
-            chairBack2.position.set(0, 44.5, 0);
-            chairBack2.rotation.x = -Math.PI / 9;
-
-            chairBack3 = chairBacks.clone();
-            chairBack3.position.set(-10, 44.5, 0);
-            chairBack3.rotation.x = -Math.PI / 9;
-
-            chairBack4 = chairBackss.clone();
-            chairBack4.position.set(0, 30, 1.5);
-            chairBack4.rotation.x = -Math.PI / 9
-            chairBack4.rotation.z = Math.PI / 2;
-            chairBottom.position.set(0, 20, 15);
-
-            var geometry = new THREE.BoxGeometry(2, 3, 1);
-            var material = new THREE.MeshNormalMaterial({
-                transparent: true,
-                opacity: 0.5
-            });
-
-            var chairQQ = new THREE.Mesh(geometry,geometry);
-            chairQQ.add(chairHand1, chairHand2, chairBottom, chairBack, chairBack1, chairBack2, chairBack3, chairBack4, chairLeg1, chairLeg2, chairLeg3, chairLeg4);
-
-            console.log(chairQQ);
+            mesh.rotation.x = -Math.PI / 2;
 
 
-            return chairQQ;
+            return mesh;
         }
 
         function buildTable() {
@@ -373,45 +254,311 @@
             loader.crossOrigin = '';
             texture = loader.load('https://i.imgur.com/DrvlmNW.jpg');
 
-            tableLeg = new THREE.Mesh(new THREE.BoxGeometry(5, 30, 5), new THREE.MeshBasicMaterial({
+            const geo = new THREE.BufferGeometry();
+            const pts = [
+                new THREE.Vector3(-84.5, 26, -0.5), //A 0
+                new THREE.Vector3(0.5, 26, -0.5), //B   1
+                new THREE.Vector3(-84.5, 26, 48), //C   2
+                new THREE.Vector3(0.5, 26, 48), //D     3
+                new THREE.Vector3(-84.5, 21, -0.5), //E    4
+                new THREE.Vector3(0.5, 21, -0.5), //F      5
+                new THREE.Vector3(-84.5, 21, 48), //G      6
+                new THREE.Vector3(0.5, 21, 48), //H        7
+
+                new THREE.Vector3(-84.5, 21, -0.5), // I 8
+                new THREE.Vector3(-79.5, 21, -0.5), //J 9
+                new THREE.Vector3(-84.5, 21, 5.5), // K 10
+                new THREE.Vector3(-79.5, 21, 5.5),   //L 11
+                new THREE.Vector3(-84.5, 0, -0.5),   //M 12
+                new THREE.Vector3(-79.5, 0, -0.5),  // N 13
+                new THREE.Vector3(-84.5, 0, 5.5),   //O
+                new THREE.Vector3(-79.5, 0, 5.5),   // P
+
+                new THREE.Vector3(-84.5, 21, 43), // I 8
+                new THREE.Vector3(-79.5, 21, 43), //J 9
+                new THREE.Vector3(-84.5, 21, 48), // K 10
+                new THREE.Vector3(-79.5, 21, 48),   //L 11
+                new THREE.Vector3(-84.5, 0, 43),   //M 12
+                new THREE.Vector3(-79.5, 0, 43),  // N 13
+                new THREE.Vector3(-84.5, 0, 48),   //O
+                new THREE.Vector3(-79.5, 0, 48),   // P
+
+                new THREE.Vector3(-5, 21, 43), // I 8
+                new THREE.Vector3(-0, 21, 43), //J 9
+                new THREE.Vector3(-5, 21, 48), // K 10
+                new THREE.Vector3(-0, 21, 48),   //L 11
+                new THREE.Vector3(-5, 0, 43),   //M 12
+                new THREE.Vector3(-0, 0, 43),  // N 13
+                new THREE.Vector3(-5, 0, 48),   //O
+                new THREE.Vector3(-0, 0, 48),   // P
+
+                new THREE.Vector3(-5, 21, -0.5), // I 8
+                new THREE.Vector3(-0, 21, -0.5), //J 9
+                new THREE.Vector3(-5, 21, 5), // K 10
+                new THREE.Vector3(-0, 21, 5),   //L 11
+                new THREE.Vector3(-5, 0, -0.5),   //M 12
+                new THREE.Vector3(-0, 0, -0.5),  // N 13
+                new THREE.Vector3(-5, 0, 5),   //O
+                new THREE.Vector3(-0, 0, 5)   // P
+            ];
+
+            const points = [
+                pts[32].clone(), //A
+                pts[34].clone(), //C
+                pts[33].clone(), //B
+                //
+                pts[33].clone(), //B
+                pts[34].clone(), //C
+                pts[35].clone(), //D
+                //ABC+BCD這樣算一個面
+                pts[32].clone(), //A
+                pts[33].clone(), //B
+                pts[36].clone(), //E
+                //
+                pts[33].clone(), //B
+                pts[37].clone(), //F
+                pts[36].clone(), //E
+                //ABE+BFE
+                pts[36].clone(), //E
+                pts[37].clone(), //F
+                pts[38].clone(), //G
+                //
+                pts[37].clone(), //F
+                pts[39].clone(), //H
+                pts[38].clone(), //G
+                //EFG+FHG
+                pts[34].clone(), //C
+                pts[38].clone(), //G
+                pts[35].clone(), //D
+                //
+                pts[35].clone(), //D
+                pts[38].clone(), //G
+                pts[39].clone(), //H
+                //EFG+FGH
+                pts[32].clone(), //A
+                pts[38].clone(), //G
+                pts[34].clone(), //C
+                //
+                pts[32].clone(), //A
+                pts[36].clone(), //E
+                pts[38].clone(), //G
+                //ACG+AEG
+                pts[33].clone(), //B
+                pts[35].clone(), //D
+                pts[39].clone(), //H
+                //
+                pts[33].clone(), //B
+                pts[39].clone(), //H
+                pts[37].clone(), //F
+                ///  BBBBBBBBBBBBBBBB
+                pts[24].clone(), //A
+                pts[26].clone(), //C
+                pts[25].clone(), //B
+                //
+                pts[25].clone(), //B
+                pts[26].clone(), //C
+                pts[27].clone(), //D
+                //ABC+BCD這樣算一個面
+                pts[24].clone(), //A
+                pts[25].clone(), //B
+                pts[28].clone(), //E
+                //
+                pts[25].clone(), //B
+                pts[29].clone(), //F
+                pts[28].clone(), //E
+                //ABE+BFE
+                pts[28].clone(), //E
+                pts[29].clone(), //F
+                pts[30].clone(), //G
+                //
+                pts[29].clone(), //F
+                pts[31].clone(), //H
+                pts[30].clone(), //G
+                //EFG+FHG
+                pts[26].clone(), //C
+                pts[30].clone(), //G
+                pts[27].clone(), //D
+                //
+                pts[27].clone(), //D
+                pts[30].clone(), //G
+                pts[31].clone(), //H
+                //EFG+FGH
+                pts[24].clone(), //A
+                pts[30].clone(), //G
+                pts[26].clone(), //C
+                //
+                pts[24].clone(), //A
+                pts[28].clone(), //E
+                pts[30].clone(), //G
+                //ACG+AEG
+                pts[25].clone(), //B
+                pts[27].clone(), //D
+                pts[31].clone(), //H
+                //
+                pts[25].clone(), //B
+                pts[31].clone(), //H
+                pts[29].clone(), //F
+
+
+                ///////////////////////AAA
+                pts[16].clone(), //A
+                pts[18].clone(), //C
+                pts[17].clone(), //B
+                //
+                pts[17].clone(), //B
+                pts[18].clone(), //C
+                pts[19].clone(), //D
+                //ABC+BCD這樣算一個面
+                pts[16].clone(), //A
+                pts[17].clone(), //B
+                pts[20].clone(), //E
+                //
+                pts[17].clone(), //B
+                pts[21].clone(), //F
+                pts[20].clone(), //E
+                //ABE+BFE
+                pts[20].clone(), //E
+                pts[21].clone(), //F
+                pts[22].clone(), //G
+                //
+                pts[21].clone(), //F
+                pts[23].clone(), //H
+                pts[22].clone(), //G
+                //EFG+FHG
+                pts[18].clone(), //C
+                pts[22].clone(), //G
+                pts[19].clone(), //D
+                //
+                pts[19].clone(), //D
+                pts[22].clone(), //G
+                pts[23].clone(), //H
+                //EFG+FGH
+                pts[16].clone(), //A
+                pts[22].clone(), //G
+                pts[18].clone(), //C
+                //
+                pts[16].clone(), //A
+                pts[20].clone(), //E
+                pts[22].clone(), //G
+                //ACG+AEG
+                pts[17].clone(), //B
+                pts[19].clone(), //D
+                pts[23].clone(), //H
+                //
+                pts[17].clone(), //B
+                pts[23].clone(), //H
+                pts[21].clone(), //F
+
+                //////////////////////
+                pts[8].clone(), //A
+                pts[10].clone(), //C
+                pts[9].clone(), //B
+                //
+                pts[9].clone(), //B
+                pts[10].clone(), //C
+                pts[11].clone(), //D
+                //ABC+BCD這樣算一個面
+                pts[8].clone(), //A
+                pts[9].clone(), //B
+                pts[12].clone(), //E
+                //
+                pts[9].clone(), //B
+                pts[13].clone(), //F
+                pts[12].clone(), //E
+                //ABE+BFE
+                pts[12].clone(), //E
+                pts[13].clone(), //F
+                pts[14].clone(), //G
+                //
+                pts[13].clone(), //F
+                pts[15].clone(), //H
+                pts[14].clone(), //G
+                //EFG+FHG
+                pts[10].clone(), //C
+                pts[14].clone(), //G
+                pts[11].clone(), //D
+                //
+                pts[11].clone(), //D
+                pts[14].clone(), //G
+                pts[15].clone(), //H
+                //EFG+FGH
+                pts[8].clone(), //A
+                pts[14].clone(), //G
+                pts[10].clone(), //C
+                //
+                pts[8].clone(), //A
+                pts[12].clone(), //E
+                pts[14].clone(), //G
+                //ACG+AEG
+                pts[9].clone(), //B
+                pts[11].clone(), //D
+                pts[15].clone(), //H
+                //
+                pts[9].clone(), //B
+                pts[15].clone(), //H
+                pts[13].clone(), //F
+
+                ////////////////////
+                pts[0].clone(), //A
+                pts[2].clone(), //C
+                pts[1].clone(), //B
+                //
+                pts[1].clone(), //B
+                pts[2].clone(), //C
+                pts[3].clone(), //D
+                //ABC+BCD這樣算一個面
+                pts[0].clone(), //A
+                pts[1].clone(), //B
+                pts[4].clone(), //E
+                //
+                pts[1].clone(), //B
+                pts[5].clone(), //F
+                pts[4].clone(), //E
+                //ABE+BFE
+                pts[4].clone(), //E
+                pts[5].clone(), //F
+                pts[6].clone(), //G
+                //
+                pts[5].clone(), //F
+                pts[7].clone(), //H
+                pts[6].clone(), //G
+                //EFG+FHG
+                pts[2].clone(), //C
+                pts[6].clone(), //G
+                pts[3].clone(), //D
+                //
+                pts[3].clone(), //D
+                pts[6].clone(), //G
+                pts[7].clone(), //H
+                //EFG+FGH
+                pts[0].clone(), //A
+                pts[6].clone(), //G
+                pts[2].clone(), //C
+                //
+                pts[0].clone(), //A
+                pts[4].clone(), //E
+                pts[6].clone(), //G
+                //ACG+AEG
+                pts[1].clone(), //B
+                pts[3].clone(), //D
+                pts[7].clone(), //H
+                //
+                pts[1].clone(), //B
+                pts[7].clone(), //H
+                pts[5].clone() //F
+
+            ];
+
+            geo.setFromPoints(points);
+
+            const mat = new THREE.MeshBasicMaterial({
                 map: texture
-            }));
-            tableSurface = new THREE.Mesh(new THREE.BoxGeometry(84, 5, 48), new THREE.MeshBasicMaterial({
-                map: texture
-            }));
-            tableSide = new THREE.Mesh(new THREE.BoxGeometry(72, 5, 3), new THREE.MeshBasicMaterial({
-                map: texture
-            }));
-            tableSideA = new THREE.Mesh(new THREE.BoxGeometry(3, 5, 38), new THREE.MeshBasicMaterial({
-                map: texture
-            }));
-
-            tableLeg1 = tableLeg.clone();
-            tableLeg1.position.set(-38, 15, 50);
-            tableLeg2 = tableLeg.clone();
-            tableLeg2.position.set(38, 15, 10);
-            tableLeg3 = tableLeg.clone();
-            tableLeg3.position.set(-38, 15, 10);
-            tableLeg4 = tableLeg.clone();
-            tableLeg4.position.set(38, 15, 50);
-
-            tableSurface.position.set(0, 32.5, 30);
-
-            tableSide1 = tableSide.clone();
-            tableSide1.position.set(0, 28, 50);
-            tableSide2 = tableSide.clone();
-            tableSide2.position.set(0, 28, 10);
-            tableSide3 = tableSideA.clone();
-            tableSide3.position.set(38, 28, 30)
-            tableSide4 = tableSideA.clone();
-            tableSide4.position.set(-38, 28, 30)
+            });
+            const mesh = new THREE.Mesh(geo, mat);
 
 
-            var tableQQ = new THREE.Group();
-            tableQQ.add(tableLeg1, tableLeg2, tableLeg3, tableLeg4, tableSurface, tableSide1, tableSide2, tableSide3, tableSide4);
 
-
-            return tableQQ;
+            return mesh;
         }
 
         function onWindowResize() {
@@ -429,41 +576,42 @@
             mouse.y = -((event.clientY - viewportPos.top) / $('#container').innerHeight()) * 2 + 1;
 
 
+            puck = buildChair();
+            tablePuck = buildTable();
+
             raycaster.setFromCamera(mouse, camera);
             if (placing === true) { // place
-                if (chair === true) {
+                var intersects = raycaster.intersectObject(floorGroup);
+                if (intersects.length > 0) {
+                    if (chair === true) {
 
-                    var intersects = raycaster.intersectObject(floorGroup);
-                    if (intersects.length > 0) {
-                        var newPuck = chairA.clone();
+                        var newPuck = puck;
                         //console.log(newPuck);
                         newPuck.position.copy(intersects[0].point);
-                        //newPuck.name = 'puck'+puckId++;
+                        newPuck.name = 'chair';
+                        scene.add(newPuck);
+                        pucks.push(newPuck);
+                        //console.log(newPuck.name);
+                    }
+                    else if (table === true) {
+
+                        var newPuck = tablePuck;
+                        newPuck.position.copy(intersects[0].point);
+                        newPuck.name = 'table';
                         scene.add(newPuck);
                         pucks.push(newPuck);
                     }
                 }
-                else if (table === true) {
-                    /*
-                    var intersectsT = raycaster.intersectObject(floorGroup);
-                    if (intersectsT.length > 0) {
-                        var newPuckT = tablePuck.clone();
-                        newPuckT.position.copy(intersectsT[0].point);
-                        //newPuck.name = 'puck'+puckId++;
-                        scene.add(newPuckT);
-                        tables.push(newPuckT);
-                    }
-                    */
-                }
+
+
 
             } else if (drop === true) { // delete
-                
+
                 var intersects = raycaster.intersectObjects(pucks);
-                
+
                 if (intersects.length > 0) {
                     thePuck = intersects[0].object;
-                    
-                    //scene.remove(thePuck);
+
                     thePuck.removeFromParent();
 
                     // remove thePuck from pucks
@@ -508,12 +656,12 @@
             if (thePuck === null) return;
 
             var viewportPos = $('#container').get(0).getBoundingClientRect();
-            mouse.x = ((event.clientX - viewportPos.left) / $('#container').innerWidth())  *2- 1;
-            mouse.y = -((event.clientY - viewportPos.top) / $('#container').innerHeight()) *2 + 1;
+            mouse.x = ((event.clientX - viewportPos.left) / $('#container').innerWidth()) * 2 - 1;
+            mouse.y = -((event.clientY - viewportPos.top) / $('#container').innerHeight()) * 2 + 1;
 
             raycaster.setFromCamera(mouse, camera);
             var intersects = raycaster.intersectObject(floorGroup);
-            if (intersects.length > 0) {
+            if (intersects.length > 0 && moving === true) {
 
                 controls.enabled = false; // to disable camera movement
                 thePuck.position.copy(intersects[0].point);
