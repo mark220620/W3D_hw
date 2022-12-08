@@ -249,100 +249,65 @@
         function buildChair() {
             let loader = new THREE.TextureLoader();
             loader.crossOrigin = '';
-            texture = loader.load('https://i.imgur.com/DrvlmNW.jpg');
-
-            const length = 12, width = 8;
-
-            const shape = new THREE.Shape();
-            shape.moveTo(0, 0);
-            shape.lineTo(0, width);
-            shape.lineTo(length, width);
-            shape.lineTo(length, 0);
-            shape.lineTo(0, 0);
-
-            const extrudeSettings = {
-                steps: 3,
-                depth: 15,
-                bevelEnabled: true,
-                bevelThickness: 2,
-                bevelSize: 2,
-                bevelOffset: 0,
-                bevelSegments: 5
-            };
-
-            const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-            const material = new THREE.MeshBasicMaterial({ map: texture });
-            const mesh = new THREE.Mesh(geometry, material);
-
-            mesh.rotation.x = -Math.PI / 2;
-
-
-            return mesh;
-        }
-
-        function buildTable() {
-
-            let loader = new THREE.TextureLoader();
-            loader.crossOrigin = '';
-            texture = loader.load('https://i.imgur.com/DrvlmNW.jpg');
+            texture = loader.load('https://i.imgur.com/ahJLRTt.jpg');
 
             const geo = new THREE.BufferGeometry();
             const pts = [
-                new THREE.Vector3(-84.5, 26, -0.5), //A 0
-                new THREE.Vector3(0.5, 26, -0.5), //B   1
-                new THREE.Vector3(-84.5, 26, 48), //C   2
-                new THREE.Vector3(0.5, 26, 48), //D     3
-                new THREE.Vector3(-84.5, 21, -0.5), //E    4
-                new THREE.Vector3(0.5, 21, -0.5), //F      5
-                new THREE.Vector3(-84.5, 21, 48), //G      6
-                new THREE.Vector3(0.5, 21, 48), //H        7
+                new THREE.Vector3(-20, 20, -0), //A 0
+                new THREE.Vector3(0, 20, -0), //B   1
+                new THREE.Vector3(-20, 20, 20), //C   2
+                new THREE.Vector3(0, 20, 20), //D     3
+                new THREE.Vector3(-20, 17, -0), //E    4
+                new THREE.Vector3(0, 17, -0), //F      5
+                new THREE.Vector3(-20, 17, 20), //G      6
+                new THREE.Vector3(0, 17, 20), //H        7
 
-                new THREE.Vector3(-84.5, 21, -0.5), // I 8
-                new THREE.Vector3(-79.5, 21, -0.5), //J 9
-                new THREE.Vector3(-84.5, 21, 5.5), // K 10
-                new THREE.Vector3(-79.5, 21, 5.5),   //L 11
-                new THREE.Vector3(-84.5, 0, -0.5),   //M 12
-                new THREE.Vector3(-79.5, 0, -0.5),  // N 13
-                new THREE.Vector3(-84.5, 0, 5.5),   //O
-                new THREE.Vector3(-79.5, 0, 5.5),   // P
+                new THREE.Vector3(-20, 20, 0), // I 8
+                new THREE.Vector3(-17, 20, 0), //J 9
+                new THREE.Vector3(-20, 20, 3), // K 10
+                new THREE.Vector3(-17, 20, 3),   //L 11
+                new THREE.Vector3(-20, 0, 0),   //M 12
+                new THREE.Vector3(-17, 0, 0),  // N 13
+                new THREE.Vector3(-20, 0, 3),   //O 14
+                new THREE.Vector3(-17, 0, 3),   // P 15
 
-                new THREE.Vector3(-84.5, 21, 43), // I 8
-                new THREE.Vector3(-79.5, 21, 43), //J 9
-                new THREE.Vector3(-84.5, 21, 48), // K 10
-                new THREE.Vector3(-79.5, 21, 48),   //L 11
-                new THREE.Vector3(-84.5, 0, 43),   //M 12
-                new THREE.Vector3(-79.5, 0, 43),  // N 13
-                new THREE.Vector3(-84.5, 0, 48),   //O
-                new THREE.Vector3(-79.5, 0, 48),   // P
+                new THREE.Vector3(-20, 20, 17), //  16
+                new THREE.Vector3(-17, 20, 17), // 17
+                new THREE.Vector3(-20, 20, 20), //  18
+                new THREE.Vector3(-17, 20, 20),   // 19
+                new THREE.Vector3(-20, 0, 17),   // 20
+                new THREE.Vector3(-17, 0, 17),  //  21
+                new THREE.Vector3(-20, 0, 20),   // 22
+                new THREE.Vector3(-17, 0, 20),   //  23
 
-                new THREE.Vector3(-5, 21, 43), // I 8
-                new THREE.Vector3(-0, 21, 43), //J 9
-                new THREE.Vector3(-5, 21, 48), // K 10
-                new THREE.Vector3(-0, 21, 48),   //L 11
-                new THREE.Vector3(-5, 0, 43),   //M 12
-                new THREE.Vector3(-0, 0, 43),  // N 13
-                new THREE.Vector3(-5, 0, 48),   //O
-                new THREE.Vector3(-0, 0, 48),   // P
+                new THREE.Vector3(-3, 20, 17), //   24
+                new THREE.Vector3(-0, 20, 17), //       25
+                new THREE.Vector3(-3, 20, 20), //       26
+                new THREE.Vector3(-0, 20, 20),   //     27
+                new THREE.Vector3(-3, 0, 17),   //      28
+                new THREE.Vector3(-0, 0, 17),  //      29
+                new THREE.Vector3(-3, 0, 20),   //     30
+                new THREE.Vector3(-0, 0, 20),   //     31
 
-                new THREE.Vector3(-5, 21, -0.5), // I 8
-                new THREE.Vector3(-0, 21, -0.5), //J 9
-                new THREE.Vector3(-5, 21, 5), // K 10
-                new THREE.Vector3(-0, 21, 5),   //L 11
-                new THREE.Vector3(-5, 0, -0.5),   //M 12
-                new THREE.Vector3(-0, 0, -0.5),  // N 13
-                new THREE.Vector3(-5, 0, 5),   //O
-                new THREE.Vector3(-0, 0, 5)   // P
+                new THREE.Vector3(-3, 20, -0), //     32
+                new THREE.Vector3(-0, 20, -0), //     33
+                new THREE.Vector3(-3, 20, 3), //        34
+                new THREE.Vector3(-0, 20, 3),   //      34
+                new THREE.Vector3(-3, 0, 0),   //     36
+                new THREE.Vector3(-0, 0, 0),  //      37
+                new THREE.Vector3(-3, 0, 3),   //       38
+                new THREE.Vector3(-0, 0, 3)   //       39
             ];
 
             const points = [
-                pts[32].clone(), //A
-                pts[34].clone(), //C
-                pts[33].clone(), //B
+                pts[32].clone(), 
+                pts[34].clone(), 
+                pts[33].clone(), 
                 //
                 pts[33].clone(), //B
                 pts[34].clone(), //C
                 pts[35].clone(), //D
-                //ABC+BCD這樣算一個面
+              
                 pts[32].clone(), //A
                 pts[33].clone(), //B
                 pts[36].clone(), //E
@@ -350,7 +315,7 @@
                 pts[33].clone(), //B
                 pts[37].clone(), //F
                 pts[36].clone(), //E
-                //ABE+BFE
+            
                 pts[36].clone(), //E
                 pts[37].clone(), //F
                 pts[38].clone(), //G
@@ -358,7 +323,7 @@
                 pts[37].clone(), //F
                 pts[39].clone(), //H
                 pts[38].clone(), //G
-                //EFG+FHG
+                
                 pts[34].clone(), //C
                 pts[38].clone(), //G
                 pts[35].clone(), //D
@@ -366,7 +331,7 @@
                 pts[35].clone(), //D
                 pts[38].clone(), //G
                 pts[39].clone(), //H
-                //EFG+FGH
+                
                 pts[32].clone(), //A
                 pts[38].clone(), //G
                 pts[34].clone(), //C
@@ -390,7 +355,7 @@
                 pts[25].clone(), //B
                 pts[26].clone(), //C
                 pts[27].clone(), //D
-                //ABC+BCD這樣算一個面
+             
                 pts[24].clone(), //A
                 pts[25].clone(), //B
                 pts[28].clone(), //E
@@ -440,7 +405,7 @@
                 pts[17].clone(), //B
                 pts[18].clone(), //C
                 pts[19].clone(), //D
-                //ABC+BCD這樣算一個面
+               
                 pts[16].clone(), //A
                 pts[17].clone(), //B
                 pts[20].clone(), //E
@@ -489,7 +454,7 @@
                 pts[9].clone(), //B
                 pts[10].clone(), //C
                 pts[11].clone(), //D
-                //ABC+BCD這樣算一個面
+       
                 pts[8].clone(), //A
                 pts[9].clone(), //B
                 pts[12].clone(), //E
@@ -538,7 +503,320 @@
                 pts[1].clone(), //B
                 pts[2].clone(), //C
                 pts[3].clone(), //D
-                //ABC+BCD這樣算一個面
+           
+                pts[0].clone(), //A
+                pts[1].clone(), //B
+                pts[4].clone(), //E
+                //
+                pts[1].clone(), //B
+                pts[5].clone(), //F
+                pts[4].clone(), //E
+                //ABE+BFE
+                pts[4].clone(), //E
+                pts[5].clone(), //F
+                pts[6].clone(), //G
+                //
+                pts[5].clone(), //F
+                pts[7].clone(), //H
+                pts[6].clone(), //G
+                //EFG+FHG
+                pts[2].clone(), //C
+                pts[6].clone(), //G
+                pts[3].clone(), //D
+                //
+                pts[3].clone(), //D
+                pts[6].clone(), //G
+                pts[7].clone(), //H
+                //EFG+FGH
+                pts[0].clone(), //A
+                pts[6].clone(), //G
+                pts[2].clone(), //C
+                //
+                pts[0].clone(), //A
+                pts[4].clone(), //E
+                pts[6].clone(), //G
+                //ACG+AEG
+                pts[1].clone(), //B
+                pts[3].clone(), //D
+                pts[7].clone(), //H
+                //
+                pts[1].clone(), //B
+                pts[7].clone(), //H
+                pts[5].clone() //F
+
+            ];
+
+            geo.setFromPoints(points);
+
+            const mat = new THREE.MeshBasicMaterial({
+                map: texture
+            });
+
+            const mesh = new THREE.Mesh(geo, mat);
+
+
+            return mesh;
+        }
+
+        function buildTable() {
+
+            let loader = new THREE.TextureLoader();
+            loader.crossOrigin = '';
+            texture = loader.load('https://i.imgur.com/bscx5if.jpg');
+
+            const geo = new THREE.BufferGeometry();
+            const pts = [
+                new THREE.Vector3(-84.5, 26, -0.5), //A 0
+                new THREE.Vector3(0.5, 26, -0.5), //B   1
+                new THREE.Vector3(-84.5, 26, 48), //C   2
+                new THREE.Vector3(0.5, 26, 48), //D     3
+                new THREE.Vector3(-84.5, 21, -0.5), //E    4
+                new THREE.Vector3(0.5, 21, -0.5), //F      5
+                new THREE.Vector3(-84.5, 21, 48), //G      6
+                new THREE.Vector3(0.5, 21, 48), //H        7
+
+                new THREE.Vector3(-84.5, 21, -0.5), // I 8
+                new THREE.Vector3(-79.5, 21, -0.5), //J 9
+                new THREE.Vector3(-84.5, 21, 5.5), // K 10
+                new THREE.Vector3(-79.5, 21, 5.5),   //L 11
+                new THREE.Vector3(-84.5, 0, -0.5),   //M 12
+                new THREE.Vector3(-79.5, 0, -0.5),  // N 13
+                new THREE.Vector3(-84.5, 0, 5.5),   //O 14
+                new THREE.Vector3(-79.5, 0, 5.5),   // P 15
+
+                new THREE.Vector3(-84.5, 21, 43), //  16
+                new THREE.Vector3(-79.5, 21, 43), // 17
+                new THREE.Vector3(-84.5, 21, 48), //  18
+                new THREE.Vector3(-79.5, 21, 48),   // 19
+                new THREE.Vector3(-84.5, 0, 43),   // 20
+                new THREE.Vector3(-79.5, 0, 43),  //  21
+                new THREE.Vector3(-84.5, 0, 48),   // 22
+                new THREE.Vector3(-79.5, 0, 48),   //  23
+
+                new THREE.Vector3(-5, 21, 43), //   24
+                new THREE.Vector3(-0, 21, 43), //       25
+                new THREE.Vector3(-5, 21, 48), //       26
+                new THREE.Vector3(-0, 21, 48),   //     27
+                new THREE.Vector3(-5, 0, 43),   //      28
+                new THREE.Vector3(-0, 0, 43),  //      29
+                new THREE.Vector3(-5, 0, 48),   //     30
+                new THREE.Vector3(-0, 0, 48),   //     31
+
+                new THREE.Vector3(-5, 21, -0.5), //     32
+                new THREE.Vector3(-0, 21, -0.5), //     33
+                new THREE.Vector3(-5, 21, 5), //        34
+                new THREE.Vector3(-0, 21, 5),   //      34
+                new THREE.Vector3(-5, 0, -0.5),   //     36
+                new THREE.Vector3(-0, 0, -0.5),  //      37
+                new THREE.Vector3(-5, 0, 5),   //       38
+                new THREE.Vector3(-0, 0, 5)   //       39
+            ];
+
+            const points = [
+                pts[32].clone(), 
+                pts[34].clone(), 
+                pts[33].clone(), 
+                //
+                pts[33].clone(), //B
+                pts[34].clone(), //C
+                pts[35].clone(), //D
+              
+                pts[32].clone(), //A
+                pts[33].clone(), //B
+                pts[36].clone(), //E
+                //
+                pts[33].clone(), //B
+                pts[37].clone(), //F
+                pts[36].clone(), //E
+            
+                pts[36].clone(), //E
+                pts[37].clone(), //F
+                pts[38].clone(), //G
+                //
+                pts[37].clone(), //F
+                pts[39].clone(), //H
+                pts[38].clone(), //G
+                
+                pts[34].clone(), //C
+                pts[38].clone(), //G
+                pts[35].clone(), //D
+                //
+                pts[35].clone(), //D
+                pts[38].clone(), //G
+                pts[39].clone(), //H
+                
+                pts[32].clone(), //A
+                pts[38].clone(), //G
+                pts[34].clone(), //C
+                //
+                pts[32].clone(), //A
+                pts[36].clone(), //E
+                pts[38].clone(), //G
+                //ACG+AEG
+                pts[33].clone(), //B
+                pts[35].clone(), //D
+                pts[39].clone(), //H
+                //
+                pts[33].clone(), //B
+                pts[39].clone(), //H
+                pts[37].clone(), //F
+                ///  BBBBBBBBBBBBBBBB
+                pts[24].clone(), //A
+                pts[26].clone(), //C
+                pts[25].clone(), //B
+                //
+                pts[25].clone(), //B
+                pts[26].clone(), //C
+                pts[27].clone(), //D
+             
+                pts[24].clone(), //A
+                pts[25].clone(), //B
+                pts[28].clone(), //E
+                //
+                pts[25].clone(), //B
+                pts[29].clone(), //F
+                pts[28].clone(), //E
+                //ABE+BFE
+                pts[28].clone(), //E
+                pts[29].clone(), //F
+                pts[30].clone(), //G
+                //
+                pts[29].clone(), //F
+                pts[31].clone(), //H
+                pts[30].clone(), //G
+                //EFG+FHG
+                pts[26].clone(), //C
+                pts[30].clone(), //G
+                pts[27].clone(), //D
+                //
+                pts[27].clone(), //D
+                pts[30].clone(), //G
+                pts[31].clone(), //H
+                //EFG+FGH
+                pts[24].clone(), //A
+                pts[30].clone(), //G
+                pts[26].clone(), //C
+                //
+                pts[24].clone(), //A
+                pts[28].clone(), //E
+                pts[30].clone(), //G
+                //ACG+AEG
+                pts[25].clone(), //B
+                pts[27].clone(), //D
+                pts[31].clone(), //H
+                //
+                pts[25].clone(), //B
+                pts[31].clone(), //H
+                pts[29].clone(), //F
+
+
+                ///////////////////////AAA
+                pts[16].clone(), //A
+                pts[18].clone(), //C
+                pts[17].clone(), //B
+                //
+                pts[17].clone(), //B
+                pts[18].clone(), //C
+                pts[19].clone(), //D
+               
+                pts[16].clone(), //A
+                pts[17].clone(), //B
+                pts[20].clone(), //E
+                //
+                pts[17].clone(), //B
+                pts[21].clone(), //F
+                pts[20].clone(), //E
+                //ABE+BFE
+                pts[20].clone(), //E
+                pts[21].clone(), //F
+                pts[22].clone(), //G
+                //
+                pts[21].clone(), //F
+                pts[23].clone(), //H
+                pts[22].clone(), //G
+                //EFG+FHG
+                pts[18].clone(), //C
+                pts[22].clone(), //G
+                pts[19].clone(), //D
+                //
+                pts[19].clone(), //D
+                pts[22].clone(), //G
+                pts[23].clone(), //H
+                //EFG+FGH
+                pts[16].clone(), //A
+                pts[22].clone(), //G
+                pts[18].clone(), //C
+                //
+                pts[16].clone(), //A
+                pts[20].clone(), //E
+                pts[22].clone(), //G
+                //ACG+AEG
+                pts[17].clone(), //B
+                pts[19].clone(), //D
+                pts[23].clone(), //H
+                //
+                pts[17].clone(), //B
+                pts[23].clone(), //H
+                pts[21].clone(), //F
+
+                //////////////////////
+                pts[8].clone(), //A
+                pts[10].clone(), //C
+                pts[9].clone(), //B
+                //
+                pts[9].clone(), //B
+                pts[10].clone(), //C
+                pts[11].clone(), //D
+       
+                pts[8].clone(), //A
+                pts[9].clone(), //B
+                pts[12].clone(), //E
+                //
+                pts[9].clone(), //B
+                pts[13].clone(), //F
+                pts[12].clone(), //E
+                //ABE+BFE
+                pts[12].clone(), //E
+                pts[13].clone(), //F
+                pts[14].clone(), //G
+                //
+                pts[13].clone(), //F
+                pts[15].clone(), //H
+                pts[14].clone(), //G
+                //EFG+FHG
+                pts[10].clone(), //C
+                pts[14].clone(), //G
+                pts[11].clone(), //D
+                //
+                pts[11].clone(), //D
+                pts[14].clone(), //G
+                pts[15].clone(), //H
+                //EFG+FGH
+                pts[8].clone(), //A
+                pts[14].clone(), //G
+                pts[10].clone(), //C
+                //
+                pts[8].clone(), //A
+                pts[12].clone(), //E
+                pts[14].clone(), //G
+                //ACG+AEG
+                pts[9].clone(), //B
+                pts[11].clone(), //D
+                pts[15].clone(), //H
+                //
+                pts[9].clone(), //B
+                pts[15].clone(), //H
+                pts[13].clone(), //F
+
+                ////////////////////
+                pts[0].clone(), //A
+                pts[2].clone(), //C
+                pts[1].clone(), //B
+                //
+                pts[1].clone(), //B
+                pts[2].clone(), //C
+                pts[3].clone(), //D
+           
                 pts[0].clone(), //A
                 pts[1].clone(), //B
                 pts[4].clone(), //E
