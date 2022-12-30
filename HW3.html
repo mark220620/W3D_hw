@@ -31,27 +31,28 @@
             <option value="Z2">orbit</option>
             <option value="A1">The Dessert: Harmony in Red</option>
             <option value="A2">The Snail</option>
-            <option value="B1">B1</option>
-            <option value="B2">B2</option>
-            <option value="B3">B3</option>
-            <option value="B4">B4</option>
-            <option value="C1">C1</option>
-            <option value="C2">C2</option>
-            <option value="C3">C3</option>
-            <option value="D1">D1</option>
-            <option value="D2">D2</option>
-            <option value="D3">D3</option>
-            <option value="E1">E1</option>
-            <option value="E2">E2</option>
-            <option value="E3">E3</option>
-            <option value="G1">G1</option>
-            <option value="G2">G2</option>
-            <option value="G3">G3</option>
-            <option value="H1">H1</option>
-            <option value="H2">H2</option>
-            <option value="H3">H3</option>
-            <option value="H4">H4</option>
-            <option value="H5">H5</option>
+            <option value="B1">San Giorgio Maggiore at Dusk</option>
+            <option value="B2">Arm of the Seine near Vetheuil</option>
+            <option value="B3">Water Lilies</option>
+            <option value="B4">Le Grand Canal</option>
+            <option value="C1">The Persistence of Memory</option>
+            <option value="C2">The Elephants</option>
+            <option value="C3">The Temptation of St. Anthony</option>
+            <option value="D1">Figures</option>
+            <option value="D2">Dance</option>
+            <option value="D3">The Alphabet</option>
+            <option value="E1">Winged Creatures</option>
+            <option value="E2">Little Girl Dreaming of Red Birds</option>
+            <option value="E3">Angels' Garden Party</option>
+            <option value="G1">Ghetto Wall</option>
+            <option value="G2">Old Sofa</option>
+            <option value="G3">Night Embers</option>
+            <option value="H1">Wheat Field with Cypresses</option>
+            <option value="H2">View of the Asylum and Chapel of Saint-Rémy
+            </option>
+            <option value="H3">The Starry Night</option>
+            <option value="H4">Landscape at twilight</option>
+            <option value="H5">The Harvest</option>
 
             <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
             <script type="module">
@@ -68,7 +69,7 @@
                     lookA1, lookA2, lookB1, lookB2, lookB3, lookB4, lookC1, lookC2, lookC3, lookD1, lookD2, lookD3, lookE1, lookE2, lookE3, lookG1, lookG2, lookG3, lookH1, lookH2, lookH3, lookH4, lookH5;
                 var goal;
                 var cameraOverlook;
-                var eyeCamera
+                var eyeCamera,lamps = [];
                 $("#paint").change(function () {
                     paintNo = $('#paint option:selected').val();
                 });
@@ -326,7 +327,7 @@
                     }));
                     paintingE2.position.set(-550, 170, -739);
 
-                    var mirka3 = loader.load('https://i.imgur.com/gIsbtix.jpg');
+                    var mirka3 = loader.load('https://i.imgur.com/8XBkxd5.png');
                     var paintingE3 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
                         map: mirka3
                     }));
@@ -357,7 +358,7 @@
                     paintingG2.position.set(-550, 170, 441);
                     paintingG2.rotation.y = Math.PI;
 
-                    var david3 = loader.load('https://i.imgur.com/xH1Oj22.jpg');
+                    var david3 = loader.load('https://i.imgur.com/DjA4mfN.png');
                     var paintingG3 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
                         map: david3
                     }));
@@ -391,7 +392,7 @@
                     paintingH4.position.set(50, 170, 441);
                     paintingH4.rotation.y = Math.PI;
 
-                    var van5 = loader.load('https://i.imgur.com/yqIbNs1.jpg');
+                    var van5 = loader.load('https://i.imgur.com/1bT0kUa.png');
                     var paintingH5 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
                         map: van5
                     }));
@@ -424,7 +425,7 @@
                     var light22 = new Light(50, 300, 180, paintingH4);
                     var light23 = new Light(-100, 300, 180, paintingH5);
 
-                    var lamps = [];
+                    lamps = [];
                     lamps.push(light1, light2, light3, light4, light5, light6, light7, light8, light9, light10, light11, light12, light13, light14, light15, light16, light17, light18, light19, light20, light21, light22, light23);
                     var spotLightHelper = new THREE.SpotLightHelper(light7.spotLight);
                     //scene.add(spotLightHelper);
