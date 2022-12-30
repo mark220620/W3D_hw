@@ -29,8 +29,8 @@
         <select id='paint'>
             <option value="Z1">overlook</option>
             <option value="Z2">orbit</option>
-            <option value="A1">A1</option>
-            <option value="A2">A2</option>
+            <option value="A1">The Dessert: Harmony in Red</option>
+            <option value="A2">The Snail</option>
             <option value="B1">B1</option>
             <option value="B2">B2</option>
             <option value="B3">B3</option>
@@ -52,10 +52,11 @@
             <option value="H3">H3</option>
             <option value="H4">H4</option>
             <option value="H5">H5</option>
-            <script src="https://threejs.org/build/three.min.js"></script>
-            <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+
             <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-            <script>
+            <script type="module">
+                import * as THREE from 'https://cdn.skypack.dev/three';
+                import { OrbitControls } from 'https://cdn.skypack.dev/three@0.136/examples/jsm/controls/OrbitControls.js';
                 var camera, scene, renderer;
                 var spotLight;
                 var useBirdEye = true;
@@ -66,6 +67,8 @@
                 var sensorAH, sensorB, sensorC, sensorD, sensorF, sensorR, paintNo = 'Z1',
                     lookA1, lookA2, lookB1, lookB2, lookB3, lookB4, lookC1, lookC2, lookC3, lookD1, lookD2, lookD3, lookE1, lookE2, lookE3, lookG1, lookG2, lookG3, lookH1, lookH2, lookH3, lookH4, lookH5;
                 var goal;
+                var cameraOverlook;
+                var eyeCamera
                 $("#paint").change(function () {
                     paintNo = $('#paint option:selected').val();
                 });
@@ -115,7 +118,7 @@
                     camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
                     camera.position.set(0, 2200, 0);
                     //camera.position.z = 800; // camera at (0,0,500)
-                    let controls = new THREE.OrbitControls(camera, renderer.domElement);
+                    let controls = new OrbitControls(camera, renderer.domElement);
 
                     ////////////////////////////////////////////////////////
 
@@ -123,7 +126,7 @@
                     cameraOverlook.position.set(0, 2200, 1000);
                     cameraOverlook.lookAt(0, 0, 0);
 
-                    eyeCamera = new THREE.PerspectiveCamera(120, window.innerWidth / window.innerHeight, 1, 10000);
+                    var eyeCamera = new THREE.PerspectiveCamera(120, window.innerWidth / window.innerHeight, 1, 10000);
                     eyeCamera.position.set(100, 150, 180);
                     eyeCamera.lookAt(700, 150, 180);
 
@@ -236,7 +239,7 @@
                     }));
                     paintingA1.position.set(739, 170, 150);
                     paintingA1.rotation.y = -Math.PI / 2;
-                    var herni2 = loader.load('https://i.imgur.com/LzckZQn.jpg');
+                    var herni2 = loader.load('https://i.imgur.com/VJtcGR2.png');
                     var paintingA2 = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({
                         map: herni2
                     }));
@@ -421,9 +424,9 @@
                     var light22 = new Light(50, 300, 180, paintingH4);
                     var light23 = new Light(-100, 300, 180, paintingH5);
 
-                    lamps = [];
+                    var lamps = [];
                     lamps.push(light1, light2, light3, light4, light5, light6, light7, light8, light9, light10, light11, light12, light13, light14, light15, light16, light17, light18, light19, light20, light21, light22, light23);
-                    spotLightHelper = new THREE.SpotLightHelper(light7.spotLight);
+                    var spotLightHelper = new THREE.SpotLightHelper(light7.spotLight);
                     //scene.add(spotLightHelper);
 
 
@@ -773,7 +776,7 @@
                     track14.rotation.z = Math.PI / 2;
                     track14.rotation.y = Math.PI / 2;
                     track14.position.set(460, 320, -150);
-                    
+
 
                 }
 
@@ -1114,10 +1117,10 @@
 
 
 
-                    cameraHelper.position.copy(eyeCamera.position);
-                    cameraHelper.quaternion.copy(eyeCamera.quaternion);
+                   // cameraHelper.position.copy(eyeCamera.position);
+                    //cameraHelper.quaternion.copy(eyeCamera.quaternion);
 
-                    spotLightHelper.update();
+                    //spotLightHelper.update();
 
                 }
 
